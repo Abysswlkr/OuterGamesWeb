@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OuterGamesWeb.Server", "OuterGamesWeb.Server\OuterGamesWeb.Server.csproj", "{A989AFF7-58CB-4F51-8672-AAC1255FD4C7}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "outergamesweb.client", "outergamesweb.client\outergamesweb.client.esproj", "{84C93EE5-05E0-483E-B1B1-083082C88BF2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A989AFF7-58CB-4F51-8672-AAC1255FD4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A989AFF7-58CB-4F51-8672-AAC1255FD4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A989AFF7-58CB-4F51-8672-AAC1255FD4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A989AFF7-58CB-4F51-8672-AAC1255FD4C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C93EE5-05E0-483E-B1B1-083082C88BF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C93EE5-05E0-483E-B1B1-083082C88BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C93EE5-05E0-483E-B1B1-083082C88BF2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{84C93EE5-05E0-483E-B1B1-083082C88BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C93EE5-05E0-483E-B1B1-083082C88BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C93EE5-05E0-483E-B1B1-083082C88BF2}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02346F9F-7F62-4825-B636-F3AC87CB6D60}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+<form (submit)="login()">
+    <input [(ngModel)]="credentials.correoElectronico" type="email" placeholder="Correo Electrónico" name="correoElectronico" required />
+    <input [(ngModel)]="credentials.contrasena" type="password" placeholder="Contraseña" name="contrasena" required />
+    <button type="submit">Iniciar Sesión</button>
+  </form>
+  

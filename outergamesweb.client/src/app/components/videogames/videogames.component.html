@@ -1,0 +1,207 @@
+<!-- bring all videojuegos -->
+<table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>Genre</th>
+      <th>Quantity</th>
+      <th>Action</th>
+    </tr>
+    <tr *ngFor="let videojuego of videojuegos">
+      <td>{{ videojuego.idvideojuego }}</td>
+      <td>{{ videojuego.nombreVideojuego }}</td>
+      <td>{{ videojuego.descripcion }}</td>
+      <td>{{ videojuego.precio }}</td>
+      <td>{{ videojuego.cantidadStock }}</td>
+      <td>{{ videojuego.genero1 }} {{ videojuego.genero2 }} {{ videojuego.genero3 }}</td>
+      <td>
+        <input type="number" [(ngModel)]="cantidad[videojuego.idvideojuego]" min="1" [max]="videojuego.cantidadStock" value="1">
+      </td>
+      <td>
+        <button (click)="editVideojuego(videojuego)">Edit</button>
+        <button (click)="deleteVideojuego(videojuego.idvideojuego)">Delete</button> <!-- New Delete button -->
+        <button (click)="addToCart(videojuego)">Add to Cart</button>
+      </td>
+    </tr>
+  </table>
+  
+  
+  <!-- Find videojuego with Id -->
+  <form (submit)="getVideojuegoById($event, videojuegoId.value)">
+    <label for="videojuegoId">Videojuego ID:</label>
+    <input type="number" id="videojuegoId" #videojuegoId>
+    <button type="submit">Get Videojuego by id</button>
+  </form>
+  
+  <div *ngIf="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+  
+  <div *ngIf="videojuego">
+    <h2>{{ videojuego.nombreVideojuego }}</h2>
+    <p>{{ videojuego.descripcion }}</p>
+    <!-- Add more fields as needed -->
+  </div>
+  
+  
+  <!-- Find videojuego with genre -->
+  <form (submit)="getVideojuegosByGenre($event, genre.value)">
+    <label for="genre">Genre:</label>
+    <input type="text" id="genre" #genre>
+    <button type="submit">Get Videojuegos</button>
+  </form>
+  
+  <div *ngIf="errorMessage && !videojuegos">
+    <p>{{ errorMessage }}</p>
+  </div>
+  
+  <div *ngIf="videojuegosFilterGenre">
+    <ul>
+      <li *ngFor="let videojuego of videojuegosFilterGenre">
+        {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Find videojuego with platform -->
+  <form (submit)="getVideojuegosByPlatform($event, plataforma.value)">
+    <label for="plataforma">Plataforma:</label>
+    <input type="text" id="plataforma" #plataforma>
+    <button type="submit">Get Videojuegos</button>
+  </form>
+  
+  <div *ngIf="errorMessage && !videojuegos">
+    <p>{{ errorMessage }}</p>
+  </div>
+  
+  <div *ngIf="videojuegosFilterPlatform">
+    <ul>
+      <li *ngFor="let videojuego of videojuegosFilterPlatform">
+        {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Find videojuego with name -->
+  <form (submit)="getVideojuegosByName($event, nombre.value)">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" #nombre>
+    <button type="submit">Get Videojuegos</button>
+  </form>
+  
+  <div *ngIf="errorMessage && !videojuegos">
+    <p>{{ errorMessage }}</p>
+  </div>
+  
+  <div *ngIf="videojuegosFilterName">
+    <ul>
+      <li *ngFor="let videojuego of videojuegosFilterName">
+        {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
+      </li>
+    </ul>
+  </div>
+  
+  
+  <!-- Find videojuego between min and ma price -->
+  <form (submit)="getVideogamesByPriceRange($event, minPrice.value, maxPrice.value)">
+    <label for="minPrice">Min Price:</label>
+    <input type="number" id="minPrice" #minPrice>
+    <label for="maxPrice">Max Price:</label>
+    <input type="number" id="maxPrice" #maxPrice>
+    <button type="submit">Get Videojuegos</button>
+  </form>
+  
+  <div *ngIf="errorMessage && !videojuegos">
+    <p>{{ errorMessage }}</p>
+  </div>
+  
+  <div *ngIf="videojuegosFilterPrice">
+    <ul>
+      <li *ngFor="let videojuego of videojuegosFilterPrice">
+        {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
+      </li>
+    </ul>
+  </div>
+    
+  
+  <!-- Create videojuego -->
+  <form (ngSubmit)="createVideojuego()">
+    <label for="nombreVideojuego">Nombre del Videojuego:</label><br>
+    <input type="text" id="nombreVideojuego" [(ngModel)]="newVideojuegoForm.nombreVideojuego" name="nombreVideojuego"><br>
+    
+    <label for="descripcion">Descripción:</label><br>
+    <textarea id="descripcion" name="descripcion" [(ngModel)]="newVideojuegoForm.descripcion"></textarea><br>
+    
+    <label for="precio">Precio:</label><br>
+    <input type="number" id="precio" name="precio" [(ngModel)]="newVideojuegoForm.precio"><br>
+    
+    <label for="cantidadStock">Cantidad en Stock:</label><br>
+    <input type="number" id="cantidadStock" name="cantidadStock" [(ngModel)]="newVideojuegoForm.cantidadStock"><br>
+    
+    <label for="plataforma">Plataforma:</label><br>
+    <input type="text" id="plataforma" name="plataforma" [(ngModel)]="newVideojuegoForm.plataforma"><br>
+    
+    <label for="genero1">Género 1:</label><br>
+    <input type="text" id="genero1" name="genero1" [(ngModel)]="newVideojuegoForm.genero1"><br>
+    
+    <label for="genero2">Género 2:</label><br>
+    <input type="text" id="genero2" name="genero2" [(ngModel)]="newVideojuegoForm.genero2"><br>
+    
+    <label for="genero3">Género 3:</label><br>
+    <input type="text" id="genero3" name="genero3" [(ngModel)]="newVideojuegoForm.genero3"><br>
+    
+    <label for="imagen">URL de la Imagen:</label><br>
+    <input type="text" id="imagen" name="imagen" [(ngModel)]="newVideojuegoForm.imagen"><br>
+    
+    <button type="submit">Crear videojuego</button>
+  </form>
+  
+  <!-- Edit videjuego -->
+  <form (submit)="submitEdit()">
+    <label for="nombreVideojuego">Nombre del Videojuego:</label><br>
+    <input type="text" id="nombreVideojuego" [(ngModel)]="editVideojuegoForm.nombreVideojuego" name="nombreVideojuego"><br>
+    
+    <label for="descripcion">Descripción:</label><br>
+    <textarea id="descripcion" name="descripcion" [(ngModel)]="editVideojuegoForm.descripcion"></textarea><br>
+    
+    <label for="precio">Precio:</label><br>
+    <input type="number" id="precio" name="precio" [(ngModel)]="editVideojuegoForm.precio"><br>
+    
+    <label for="cantidadStock">Cantidad en Stock:</label><br>
+    <input type="number" id="cantidadStock" name="cantidadStock" [(ngModel)]="editVideojuegoForm.cantidadStock"><br>
+    
+    <label for="plataforma">Plataforma:</label><br>
+    <input type="text" id="plataforma" name="plataforma" [(ngModel)]="editVideojuegoForm.plataforma"><br>
+    
+    <label for="genero1">Género 1:</label><br>
+    <input type="text" id="genero1" name="genero1" [(ngModel)]="editVideojuegoForm.genero1"><br>
+    
+    <label for="genero2">Género 2:</label><br>
+    <input type="text" id="genero2" name="genero2" [(ngModel)]="editVideojuegoForm.genero2"><br>
+    
+    <label for="genero3">Género 3:</label><br>
+    <input type="text" id="genero3" name="genero3" [(ngModel)]="editVideojuegoForm.genero3"><br>
+    
+    <label for="imagen">URL de la Imagen:</label><br>
+    <input type="text" id="imagen" name="imagen" [(ngModel)]="editVideojuegoForm.imagen"><br>
+    <button type="submit">Editar Juego</button>
+  </form>
+
+  <div *ngFor="let videojuego of (cart$ | async)?.videojuegos">
+    <h2>{{ videojuego.nombreVideojuego }}</h2>
+    <p *ngIf="videojuego.precio !== undefined && videojuego.cantidad !== undefined"> 
+      {{ videojuego.precio | currency }} x {{ videojuego.cantidad }} Precio total: {{ precioTotalPorVideojuego[videojuego.idvideojuego] | currency }}
+    </p>
+    <button (click)="removeFromCart(videojuego.idvideojuego)">Eliminar</button>
+  </div>
+
+  <p *ngIf="totalPrecio !== undefined">Total del carrito: {{ totalPrecio | currency }}</p>
+  
+  <button (click)="clearCart()">Vaciar carrito</button>
+  
+  <button (click)="logout()">Cerrar sesión</button>
+
+  
