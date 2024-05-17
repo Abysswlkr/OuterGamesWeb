@@ -19,6 +19,9 @@ export class AuthService {
 
   login(credentials: any) {
     return this.http.post(`${this.baseUrl}login`, credentials).subscribe((response: any) => {
+      localStorage.setItem('userId', response.login.idUsuario);
+      const userIdString = localStorage.getItem('userId');
+      console.log(userIdString);
       localStorage.setItem('token', response.token);
       this.router.navigate(['/']);
     });

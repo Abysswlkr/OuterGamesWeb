@@ -58,6 +58,8 @@ namespace OuterGamesWeb.Server.Controllers
                 return Unauthorized(new { message = "Correo o contraseña incorrectos." });
             }
 
+            login.IdUsuario = user.Idusuario;
+
             var jwtKey = _configuration["Jwt:Key"];
             if (string.IsNullOrEmpty(jwtKey) || jwtKey.Length < 16)
             {
@@ -77,7 +79,7 @@ namespace OuterGamesWeb.Server.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Ok(new { token = tokenHandler.WriteToken(token)});
+            return Ok(new { token = tokenHandler.WriteToken(token), login});
         }
 
 

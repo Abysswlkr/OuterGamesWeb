@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OuterGamesWeb.Server.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace OuterGamesWeb.Server.Controllers
 {
@@ -43,20 +44,14 @@ namespace OuterGamesWeb.Server.Controllers
         [HttpPost("CreateOrder")]
         public async Task<ActionResult<Pedido>> PostPedido(Pedido pedido)
         {
-            var usuario = await _context.Usuarios.FindAsync(pedido.Idusuario);
-
-            if (usuario == null)
-            {
-                return NotFound("Usuario no encontrado.");
-            }
-
+            var lastPedido = _context.Pedidos.OrderByDescending(o => o.Idpedido).FirstOrDefault();
             var pedidoExistente = await _context.Pedidos.FindAsync(pedido.Idpedido);
 
             if (pedidoExistente != null)
             {
                 return BadRequest("El ID del pedido ya está registrado.");
             }
-
+            pedido.Idpedido = (lastPedido == null) ? 1 : lastPedido.Idpedido + 1;
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
 
@@ -93,9 +88,9 @@ namespace OuterGamesWeb.Server.Controllers
         }
 
         private bool PedidoExists(int id)
-        {
-            return _context.Pedidos.Any(e => e.Idpedido == id);
-        }
+            {
+                return _context.Pedidos.Any(e => e.Idpedido == id);
+            }
 
-    }
+        }
 }

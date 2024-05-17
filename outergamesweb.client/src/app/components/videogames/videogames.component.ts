@@ -6,6 +6,8 @@ import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { Observable } from 'rxjs';
 import { Cart } from '../../interfaces/cart';
+import { Pedido } from '../../interfaces/pedidos';
+import { PedidosService } from '../../services/pedidos.service';
 
 @Component({
   selector: 'app-videogames',
@@ -20,13 +22,6 @@ export class VideogamesComponent implements OnInit{
   public videojuegosFilterName: Videojuego[] | null = [];
   public videojuegosFilterPrice: Videojuego[] | null = [];
   public errorMessage!: string;
-
-  //Cart
-  cart$: Observable<Cart>;
-  cantidad: { [key: number]: number } = {};
-  totalPrecio: number = 0; 
-  precioTotalPorVideojuego: { [key: number]: number } = {};
-  
 
   public newVideojuegoForm: Videojuego = {
     idvideojuego: 0,
@@ -54,9 +49,20 @@ export class VideogamesComponent implements OnInit{
     imagen: ''
   };
 
+  //Cart
+  cart$: Observable<Cart>;
+  cantidad: { [key: number]: number } = {};
+  totalPrecio: number = 0; 
+  precioTotalPorVideojuego: { [key: number]: number } = {};
+  
+  //Order
+  public pedido!: Pedido | null;
+
+  //Remember to take the methods before split the modules
   constructor(private videojuegoService: VideojuegosService, 
               private auth: AuthService, 
-              private cartService: CartService) {
+              private cartService: CartService,
+              private pedidoService: PedidosService) {
 
     //initializer cart 
     this.cart$ = this.cartService.cart$;
@@ -228,6 +234,64 @@ export class VideogamesComponent implements OnInit{
       });
     });
   }
+
+
+  //Create Order and details
+  createPedido() {
+    const cart: Cart =this.cartService.getCart();
+    const pedido: Pedido = {
+      idpedido: 0,
+      idusuario: cart.idusuario,
+      fechaPedido: cart.fechaPedido,
+      estadoPedido: 'Solicitado'
+    };
+
+    this.pedidoService.createPedido(pedido).subscribe(response => {
+      console.log('Pedido creado', response);
+      this.createDetails(response);
+    }, error => {
+      console.error('Error al crear el pedido', error);
+    })
+  }
+
+  createDetails(pedidoResponse: any) {
+    console.log('Datos para crear los detalles', pedidoResponse);
+  
+    const cart: Cart = this.cartService.getCart();
+    const detalles = cart.videojuegos.map(videojuego => {
+      console.log(videojuego);
+      return {
+        iddetallePedido: 0,
+        idpedido: pedidoResponse.idpedido,
+        idvideojuego: videojuego.idvideojuego,
+        cantidad: videojuego.cantidad || 0, // Asegurarse de que cantidad esté definida
+        precio: videojuego.precio
+      };
+    });
+  
+    this.pedidoService.createDetallesPedido(detalles).subscribe(response => {
+      console.log('Detalles del pedido creado', response);
+  
+      // Ahora actualizamos el stock de cada videojuego
+      cart.videojuegos.forEach(videojuego => {
+        if (videojuego.cantidad !== undefined) {
+          const updatedVideojuego = {
+            ...videojuego,
+            cantidadStock: (videojuego.cantidadStock || 0) - videojuego.cantidad 
+          };
+  
+          this.editVideojuego(updatedVideojuego);
+          this.submitEdit();
+        } else {
+          console.error('La cantidad del videojuego no está definida');
+        }
+      });
+    }, error => {
+      console.error('Error al crear los detalles del pedido', error);
+    });
+  }
+
+
 
 
 

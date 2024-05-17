@@ -200,6 +200,7 @@
 
   <p *ngIf="totalPrecio !== undefined">Total del carrito: {{ totalPrecio | currency }}</p>
   
+  <button (click)="createPedido()">Crear Pedido</button>
   <button (click)="clearCart()">Vaciar carrito</button>
   
   <button (click)="logout()">Cerrar sesión</button>

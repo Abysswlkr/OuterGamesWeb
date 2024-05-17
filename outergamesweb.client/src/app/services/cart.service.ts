@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Cart } from '../interfaces/cart';
 import { BehaviorSubject } from 'rxjs';
 import { Videojuego } from '../interfaces/videojuego';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +11,28 @@ export class CartService {
 
   private cart: Cart = {
     idusuario: 0,
-    fechaCart: new Date(),
+    fechaPedido: new Date(),
     videojuegos: []
   }
 
   private cartSubject = new BehaviorSubject<Cart>(this.cart);
   cart$ = this.cartSubject.asObservable();
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
+
+  getCart(): Cart {
+    return this.cart;
+  }
 
   addToCart(videojuego: Videojuego) {
+    const userIdString = localStorage.getItem('userId');
+    console.log(userIdString);
+    if (userIdString) {
+      const userId = parseInt(userIdString, 10);
+      this.cart.idusuario = userId;
+    } else {
+      console.error('El ID de usuario no esta disponible en el almacenamiento local')
+    }
     const existingVideojuego = this.cart.videojuegos.find(v => v.idvideojuego === videojuego.idvideojuego)
 
     if (existingVideojuego) {
@@ -28,6 +41,7 @@ export class CartService {
       this.cart.videojuegos.push(videojuego);
     }
     this.cartSubject.next(this.cart);
+    console.log(this.cart);
   }
 
   removeFromCart(idvideojuego: number) {
