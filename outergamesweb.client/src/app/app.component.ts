@@ -1,8 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Videojuego } from './interfaces/videojuego';
-import { VideojuegosService } from './services/videojuegos.service';
-import { FormBuilder } from '@angular/forms';
 
 interface WeatherForecast {
   date: string;

@@ -9,13 +9,15 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { VideogamesComponent } from './components/videogames/videogames.component';
+import { PaymentComponent } from './components/payment/payment.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    VideogamesComponent
+    VideogamesComponent,
+    PaymentComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

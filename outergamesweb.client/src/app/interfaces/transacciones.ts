@@ -1,7 +1,7 @@
 export interface Transaccion {
     idtransaccion: number;
     idpedido: number;
-    fechaTransaccion: Date;
+    fechaTransaccion: string;
     montoTransaccion: number;
     estadoTransaccion: string;
 }

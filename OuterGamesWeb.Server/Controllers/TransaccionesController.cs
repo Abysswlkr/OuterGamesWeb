@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OuterGamesWeb.Server.Models;
+using System.Text;
 
 namespace OuterGamesWeb.Server.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class TransaccionesController : Controller
     {
         private readonly OuterGamesContext _context;
         private readonly ILogger<TransaccionesController> _logger;
+        private static readonly HttpClient client = new HttpClient();
 
         public TransaccionesController(OuterGamesContext context, ILogger<TransaccionesController> logger)
         {
@@ -50,18 +53,36 @@ namespace OuterGamesWeb.Server.Controllers
 
         // POST: Transactions
         [HttpPost("CreateTransaction")]
-        public async Task<ActionResult<Transaccione>> PostTransaction(Transaccione transaction)
+        public async Task<ActionResult> PostTransaction(Transaccione transaction)
         {
             try
             {
+                var lastTransaction = _context.Transacciones.OrderByDescending(t => t.Idtransaccion).FirstOrDefault();
+                transaction.Idtransaccion = (lastTransaction == null) ? 1 : lastTransaction.Idtransaccion + 1;
                 _context.Transacciones.Add(transaction);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("GetTransaction", new { id = transaction.Idtransaccion }, transaction);
+                return Ok(transaction);
+
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("simulatePayment")]
+        public IActionResult SimulatePayment([FromBody] PaymentRequest request)
+        {
+            var response = new
+            {
+                status = "success",
+                transactionId = Guid.NewGuid().ToString(),
+                amount = request.Amount,
+                message = "Este es un pago simulado."
+            };
+            return Ok(response);
+        }
+
+
     }
 
 }

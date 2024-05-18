@@ -291,11 +291,6 @@ export class VideogamesComponent implements OnInit{
     });
   }
 
-
-
-
-
-
   logout() {
     this.auth.logout();
     console.log('Sesión finalizada.')
