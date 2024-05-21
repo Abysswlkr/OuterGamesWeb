@@ -1,0 +1,24 @@
+<table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>Genre</th>
+      <th>Quantity</th>
+      <th>Action</th>
+    </tr>
+    <tr *ngFor="let videojuego of videojuegos" >
+      <td>{{ videojuego.idvideojuego }}</td>
+      <td>{{ videojuego.nombreVideojuego }}</td>
+      <td>{{ videojuego.descripcion }}</td>
+      <td>{{ videojuego.precio }}</td>
+      <td>{{ videojuego.cantidadStock }}</td>
+      <td>{{ videojuego.genero1 }} {{ videojuego.genero2 }} {{ videojuego.genero3 }}</td>
+      <td>
+        <button (click)="editVideojuego(videojuego)">Edit</button>
+        <button (click)="deleteVideojuego(videojuego.idvideojuego)">Delete</button> <!-- New Delete button -->
+      </td>
+    </tr>
+  </table>

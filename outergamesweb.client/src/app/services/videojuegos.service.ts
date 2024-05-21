@@ -46,6 +46,18 @@ export class VideojuegosService {
     );
   }
 
+  getVideojuegosByFilters(genre: string, platform: string): Observable<any[]> {
+    let params = [];
+    if (genre) {
+      params.push(`genre=${genre}`);
+    }
+    if (platform) {
+      params.push(`platform=${platform}`);
+    }
+    const queryString = params.join('&');
+    return this.http.get<any[]>(`${this.apiUrl}/videojuegos?${queryString}`);
+  }
+
   getVideojuegosByName(nombre: string): Observable<Videojuego[]> {
     const url = `${this.apiUrl}/GetByName/${nombre}`;
     return this.http.get<Videojuego[]>(url).pipe(

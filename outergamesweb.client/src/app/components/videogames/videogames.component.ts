@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { VideojuegosService } from '../../services/videojuegos.service';
-import { FormBuilder } from '@angular/forms';
 import { Videojuego } from '../../interfaces/videojuego';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
@@ -8,6 +7,9 @@ import { Observable } from 'rxjs';
 import { Cart } from '../../interfaces/cart';
 import { Pedido } from '../../interfaces/pedidos';
 import { PedidosService } from '../../services/pedidos.service';
+import { Transaccion } from '../../interfaces/transacciones';
+import { TransaccionService } from '../../services/transaccion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-videogames',
@@ -15,6 +17,9 @@ import { PedidosService } from '../../services/pedidos.service';
   styleUrl: './videogames.component.css'
 })
 export class VideogamesComponent implements OnInit{
+  //Toast
+  show = false;
+
   public videojuegos: Videojuego[] = []; 
   public videojuego!: Videojuego | null; 
   public videojuegosFilterGenre: Videojuego[] | null = [];
@@ -22,6 +27,32 @@ export class VideogamesComponent implements OnInit{
   public videojuegosFilterName: Videojuego[] | null = [];
   public videojuegosFilterPrice: Videojuego[] | null = [];
   public errorMessage!: string;
+
+  //Genre filter
+  generos: string[] = [
+    'Acción', 'Aventura', 'Rol (RPG)', 'Estrategia', 'Simulación',
+    'Deportes', 'Carreras', 'Puzzle', 'Plataformas', 'Terror',
+    'Disparos en primera persona (FPS)', 'Disparos en tercera persona (TPS)', 
+    'Lucha', 'Música y Ritmo', 'Educativos'
+  ];
+
+  //Platform filter
+  selectedPlatform: string = '';
+  plataformas: string[] = [
+    'PC', 'PS4', 'PS5', 'Xbox One', 'Xbox Series X', 
+    'Nintendo Switch', 'iOS', 'Android', 'VR', 'Mac'
+  ];
+
+  //Search name Filter
+  searchTerm: string = '';
+
+  //Price filter
+  minPrice: number = 0;
+  maxPrice: number = 0;
+
+  //error
+  error = false;
+
 
   public newVideojuegoForm: Videojuego = {
     idvideojuego: 0,
@@ -58,11 +89,26 @@ export class VideogamesComponent implements OnInit{
   //Order
   public pedido!: Pedido | null;
 
+  //Payment
+  amount!: number;
+  response: any;
+
+  public newTransaction: Transaccion = {
+    idtransaccion: 0,
+    idpedido: 2,
+    fechaTransaccion: new Date().toISOString(),
+    montoTransaccion: 0,
+    estadoTransaccion: 'Realizada'
+  };
+
   //Remember to take the methods before split the modules
   constructor(private videojuegoService: VideojuegosService, 
               private auth: AuthService, 
               private cartService: CartService,
-              private pedidoService: PedidosService) {
+              private pedidoService: PedidosService,
+              private transaccionService: TransaccionService,
+              private router: Router,
+              ) {
 
     //initializer cart 
     this.cart$ = this.cartService.cart$;
@@ -86,16 +132,18 @@ export class VideogamesComponent implements OnInit{
       },
       (err) => {
         console.error(err);
+        this.errorMessage = 'Error al obtener la lista de videojuegos.';
+        this.videojuegos = [];
       }
     );
   }
 
-  getVideojuegoById(event: Event, id: string) {
-    event.preventDefault();
-    this.videojuegoService.getVideojuegosById(Number(id)).subscribe(
+  getVideojuegoById(id: number) {
+    this.videojuegoService.getVideojuegosById(id).subscribe(
       (videojuego) => {
-        this.videojuego = videojuego;
+        this.router.navigate(['/videogame', videojuego.idvideojuego], { state: { data: videojuego } });
         this.errorMessage = '';
+        console.log(videojuego);
       },
       (err) => {
         console.error(err)
@@ -105,65 +153,96 @@ export class VideogamesComponent implements OnInit{
     )
   }
 
-  getVideojuegosByGenre(event: Event, genre: string) {
-    event.preventDefault();
-    this.videojuegoService.getVideojuegosByGenre(genre).subscribe(
-      (videojuegos) => {
-        this.videojuegosFilterGenre = videojuegos;
-        console.log(this.videojuegosFilterGenre);
-        this.errorMessage = '';
-      },
-      (err) => {
-        console.error(err)
-        this.errorMessage = 'No se encontraron videojuegos con el género proporcionado.';
-        this.videojuegosFilterGenre = null;
-      }
-    )
+  getVideojuegosByGenre(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const genre = target.value;
+
+    if (genre === '') {
+      this.getAllVideojuegos();
+    } else {
+      this.videojuegoService.getVideojuegosByGenre(genre).subscribe(
+        (videojuegos) => {
+          this.videojuegos = videojuegos;
+          this.errorMessage = '';
+        },
+        (err) => {
+          console.error(err)
+          this.errorMessage = 'No se encontraron videojuegos con el género proporcionado.';
+          this.videojuegos = [];
+        }
+      )
+    }
   }
 
-  getVideojuegosByPlatform(event: Event, plataforma: string) {
-    event.preventDefault();
-    this.videojuegoService.getVideojuegosByPlatform(plataforma).subscribe(
-      (videojuegos) => {
-        this.videojuegosFilterPlatform = videojuegos;
-        this.errorMessage = '';
-      },
-      (err) => {
-        console.error(err);
-        this.errorMessage = 'No se encontraron videojuegos para la plataforma proporcionada.';
-        this.videojuegosFilterPlatform = null;
-      }
-    );
+  getVideojuegosByPlatform(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const plataforma = target.value;
+
+    if (plataforma === '') {
+      this.getAllVideojuegos();
+    } else {
+      this.videojuegoService.getVideojuegosByPlatform(plataforma).subscribe(
+        (videojuegos) => {
+          this.videojuegos = videojuegos;
+          this.errorMessage = '';
+        },
+        (err) => {
+          console.error(err);
+          this.errorMessage = 'No se encontraron videojuegos para la plataforma proporcionada.';
+          this.videojuegos = [];
+        }
+      );
+    }
   }
 
-  getVideojuegosByName(event: Event, nombre: string) {
-    event.preventDefault();
-    this.videojuegoService.getVideojuegosByName(nombre).subscribe(
-      (videojuegos) => {
-        this.videojuegosFilterName = videojuegos;
-        this.errorMessage = '';
-      },
-      (err) => {
-        console.error(err);
-        this.errorMessage = 'No se encontraron videojuegos para el nombre proporcionado.';
-        this.videojuegosFilterName = null;
-      }
-    );
+  getVideojuegosByName() {
+    this.videojuegos = [];
+    if (this.searchTerm === '') {
+      this.getAllVideojuegos()
+    } else {
+      this.videojuegoService.getVideojuegosByName(this.searchTerm).subscribe(
+        (videojuegos) => {
+          if (videojuegos && videojuegos.length > 0) {
+            this.videojuegos = videojuegos;
+            this.errorMessage = '';
+            this.error = false;
+          } else {
+            this.errorMessage = 'No se encontraron videojuegos para el nombre proporcionado.';
+            this.error = true;
+          }
+        },
+        (err) => {
+          this.error = true;
+          console.error(err);
+          this.errorMessage = 'Ocurrió un error al buscar los videojuegos.';
+        }
+      );
+    }
   }
+  
 
-  getVideogamesByPriceRange(event: Event, minPrice: string, maxPrice: string) {
-    event.preventDefault();
-    this.videojuegoService.getVideojuegosByPriceRange(Number(minPrice), Number(maxPrice)).subscribe(
-      (videojuegos) => {
-        this.videojuegosFilterPrice = videojuegos;
-        this.errorMessage = '';
-      },
-      (err) => {
-        console.error(err);
-        this.errorMessage = 'No se encontraron videojuegos dentro del rango de precios proporcionado.';
-        this.videojuegosFilterPrice = null;
+  getVideogamesByPriceRange() {
+    if (this.minPrice !== null || this.maxPrice !== null) {
+      if (this.minPrice === null && this.maxPrice === null) {
+        this.getAllVideojuegos();
+      } else {
+        this.videojuegoService.getVideojuegosByPriceRange(Number(this.minPrice), Number(this.maxPrice)).subscribe(
+          (videojuegos) => {
+            this.videojuegos = videojuegos;
+            this.errorMessage = '';
+          },
+          (err) => {
+            console.error(err);
+            this.errorMessage = 'No se encontraron videojuegos dentro del rango de precios proporcionado.';
+            this.videojuegos = [];
+            this.error = true;
+          }
+        );
       }
-    );
+    } else {
+      // Manejar caso en el que los campos están vacíos
+      this.getAllVideojuegos();
+    }
   }
 
   createVideojuego(): void {
@@ -248,7 +327,10 @@ export class VideogamesComponent implements OnInit{
 
     this.pedidoService.createPedido(pedido).subscribe(response => {
       console.log('Pedido creado', response);
+      console.log(response.idpedido);
       this.createDetails(response);
+      localStorage.setItem('idPedido', JSON.stringify(response.idpedido));
+      this.clearCart();
     }, error => {
       console.error('Error al crear el pedido', error);
     })
@@ -256,40 +338,72 @@ export class VideogamesComponent implements OnInit{
 
   createDetails(pedidoResponse: any) {
     console.log('Datos para crear los detalles', pedidoResponse);
-  
     const cart: Cart = this.cartService.getCart();
     const detalles = cart.videojuegos.map(videojuego => {
-      console.log(videojuego);
       return {
         iddetallePedido: 0,
         idpedido: pedidoResponse.idpedido,
         idvideojuego: videojuego.idvideojuego,
-        cantidad: videojuego.cantidad || 0, // Asegurarse de que cantidad esté definida
+        cantidad: videojuego.cantidad || 0, 
         precio: videojuego.precio
       };
     });
-  
+
+    cart.videojuegos.forEach(videojuego => {
+      if (videojuego.cantidad !== undefined) {
+        const updatedVideojuego = {
+          ...videojuego,
+          cantidadStock: (videojuego.cantidadStock || 0) - videojuego.cantidad 
+          
+        };
+        this.editVideojuego(updatedVideojuego);
+        this.submitEdit();
+      } else {
+        console.error('La cantidad del videojuego no está definida');
+      }
+    });
+
     this.pedidoService.createDetallesPedido(detalles).subscribe(response => {
       console.log('Detalles del pedido creado', response);
-  
-      // Ahora actualizamos el stock de cada videojuego
-      cart.videojuegos.forEach(videojuego => {
-        if (videojuego.cantidad !== undefined) {
-          const updatedVideojuego = {
-            ...videojuego,
-            cantidadStock: (videojuego.cantidadStock || 0) - videojuego.cantidad 
-          };
-  
-          this.editVideojuego(updatedVideojuego);
-          this.submitEdit();
-        } else {
-          console.error('La cantidad del videojuego no está definida');
-        }
-      });
+      console.log('aquí!!!!!!',)
+
     }, error => {
       console.error('Error al crear los detalles del pedido', error);
     });
   }
+
+  //Transaction (payment) Method
+  createTransaction() {
+    try {
+      this.transaccionService.simulatePayment(this.totalPrecio).subscribe(
+        response => {
+          this.response = response;
+          console.log(this.response.amount);
+          const montoTransaccion = this.response.amount;
+          this.newTransaction.montoTransaccion = montoTransaccion;
+          
+          console.log(this.newTransaction.montoTransaccion);
+          console.log(`La transacción se realizará por el monto: ${montoTransaccion}`);
+          console.log(this.newTransaction);
+  
+          this.transaccionService.createTransaction(this.newTransaction).subscribe(
+            response => {
+              console.log('transacción creada:', response);
+            }, error => {
+              console.error('Error al crear la transacción', error);
+            }
+          );
+        }, 
+        error => {
+          console.error(error);
+        }
+      );
+    } catch (ex) {
+      console.error('Error al crear la transacción', ex);
+    }
+  }
+
+  //Toast
 
   logout() {
     this.auth.logout();

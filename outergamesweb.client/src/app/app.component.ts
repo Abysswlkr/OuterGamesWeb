@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
 
 @Component({
   selector: 'app-root',
@@ -14,12 +8,11 @@ interface WeatherForecast {
 })
 export class AppComponent implements OnInit {
 
-
-  constructor() {}
-
   ngOnInit() {
     
   }
+
+
   
   title = 'outergamesweb.client';
 }

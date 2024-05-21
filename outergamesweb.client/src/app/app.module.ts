@@ -10,6 +10,11 @@ import { RegisterComponent } from './components/register/register.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { VideogamesComponent } from './components/videogames/videogames.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { LandingComponent } from './components/landing/landing.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { VideogameComponent } from './components/videogame/videogame.component';
+import { ManagementComponent } from './components/management/management.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +23,11 @@ import { PaymentComponent } from './components/payment/payment.component';
     RegisterComponent,
     VideogamesComponent,
     PaymentComponent,
+    LandingComponent,
+    NavbarComponent,
+    FooterComponent,
+    VideogameComponent,
+    ManagementComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

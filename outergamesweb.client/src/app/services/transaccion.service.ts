@@ -24,6 +24,14 @@ export class TransaccionService {
   }
 
   createTransaction(transaccion: Transaccion): Observable<Transaccion> {
+    const pedidoIdString = localStorage.getItem('idPedido');
+    console.log(pedidoIdString);
+    if (pedidoIdString) {
+      const idPedido = parseInt(pedidoIdString, 10);
+      transaccion.idpedido = idPedido;
+    } else {
+      console.error('El ID del pedido no esta disponible en el almacenamiento local')
+    }
     return this.http.post<Transaccion>(`${this.apiUrl}/CreateTransaction`, transaccion).pipe(
       catchError(this.handleError<Transaccion>('createTransaction'))
     )

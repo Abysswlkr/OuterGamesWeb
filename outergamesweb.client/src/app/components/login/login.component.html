@@ -1,6 +1,32 @@
-<form (submit)="login()">
+<!-- <form (submit)="login()">
     <input [(ngModel)]="credentials.correoElectronico" type="email" placeholder="Correo Electrónico" name="correoElectronico" required />
     <input [(ngModel)]="credentials.contrasena" type="password" placeholder="Contraseña" name="contrasena" required />
     <button type="submit">Iniciar Sesión</button>
-  </form>
+  </form> -->
+
+  <div class="container border px-4 px-lg-5" style="height: 100vh;">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card border-0 shadow rounded-3 my-5" style="height: 100%;">
+          <div class="card-body p-4 p-sm-5 d-flex flex-column justify-content-center">
+            <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
+            <form (submit)="login()">
+              <div class="form-floating mb-3">
+                <input [(ngModel)]="credentials.correoElectronico" name="correoElectronico" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput">Email address</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input [(ngModel)]="credentials.contrasena" name="contrasena" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Iniciar sesión</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   

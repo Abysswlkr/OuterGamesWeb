@@ -1,4 +1,104 @@
 <!-- bring all videojuegos -->
+<div class="container border">
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Buscar por nombre" [(ngModel)]="searchTerm">
+          <button class="btn btn-outline-secondary" type="button" (click)="getVideojuegosByName()">Buscar</button>
+        </div>
+      </div>
+    </div>
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+            Filtros de busqueda
+          </button>
+        </h2>
+        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+          <div class="accordion-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <select id="genreSelect" class="form-select" (change)="getVideojuegosByGenre($event)">
+                    <option value="">Seleccionar género</option>
+                    <option *ngFor="let genero of generos" [value]="genero">{{ genero }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <select id="platformSelect" class="form-select" (change)="getVideojuegosByPlatform($event)">
+                    <option value="">Seleccionar plataforma</option>
+                    <option *ngFor="let plataforma of plataformas" [value]="plataforma">{{ plataforma }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row border">
+                <div class="col-md-4 mt-2">
+                  <label for="minPrice" class="form-label">Precio mínimo:</label>
+                  <input type="number" class="form-control" id="minPrice" [(ngModel)]="minPrice" name="minPrice">
+                </div>
+                <div class="col-md-4 mt-2">
+                  <label for="maxPrice" class="form-label">Precio máximo:</label>
+                  <input type="number" class="form-control" id="maxPrice" [(ngModel)]="maxPrice" name="maxPrice">
+                </div>
+                <div class="mt-2 mb">
+                  <button class="btn btn-primary" (click)="getVideogamesByPriceRange()">Filtrar</button>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="mt-5">
+
+    <section class="py-5" >
+      <div *ngIf="error">
+        <p>No se encontraron resultados.</p>
+      </div>
+      <div class="container px-4 px-lg-5 mt-5" *ngIf="!error && videojuegos.length > 0">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+          <div class="col mb-5" *ngFor="let videojuego of videojuegos">
+            <div class="card h-100">
+              <!-- Product image -->
+              <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">
+              <!-- Product details -->
+              <div class="card-body p-4">
+                <div class="text-center">
+                  <!-- Product name -->
+                  <h5 class="fw-bolder">{{ videojuego.nombreVideojuego }}</h5>
+                  <!-- Product price -->
+                  <p class="mb-0">{{ videojuego.precio | currency }}</p>
+                </div>
+              </div>
+              <!-- Product actions -->
+              <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                <div class="text-center">
+                  <a class="btn btn-outline-dark mt-auto" (click)="getVideojuegoById(videojuego.idvideojuego)">Ver</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>    
+</div>
+
+
+
+
+
+
+
+
+
+
 <table>
     <tr>
       <th>ID</th>
@@ -10,7 +110,7 @@
       <th>Quantity</th>
       <th>Action</th>
     </tr>
-    <tr *ngFor="let videojuego of videojuegos">
+    <tr *ngFor="let videojuego of videojuegos" >
       <td>{{ videojuego.idvideojuego }}</td>
       <td>{{ videojuego.nombreVideojuego }}</td>
       <td>{{ videojuego.descripcion }}</td>
@@ -29,84 +129,8 @@
   </table>
   
   
-  <!-- Find videojuego with Id -->
-  <form (submit)="getVideojuegoById($event, videojuegoId.value)">
-    <label for="videojuegoId">Videojuego ID:</label>
-    <input type="number" id="videojuegoId" #videojuegoId>
-    <button type="submit">Get Videojuego by id</button>
-  </form>
-  
-  <div *ngIf="errorMessage">
-    <p>{{ errorMessage }}</p>
-  </div>
-  
-  <div *ngIf="videojuego">
-    <h2>{{ videojuego.nombreVideojuego }}</h2>
-    <p>{{ videojuego.descripcion }}</p>
-    <!-- Add more fields as needed -->
-  </div>
-  
-  
-  <!-- Find videojuego with genre -->
-  <form (submit)="getVideojuegosByGenre($event, genre.value)">
-    <label for="genre">Genre:</label>
-    <input type="text" id="genre" #genre>
-    <button type="submit">Get Videojuegos</button>
-  </form>
-  
-  <div *ngIf="errorMessage && !videojuegos">
-    <p>{{ errorMessage }}</p>
-  </div>
-  
-  <div *ngIf="videojuegosFilterGenre">
-    <ul>
-      <li *ngFor="let videojuego of videojuegosFilterGenre">
-        {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
-      </li>
-    </ul>
-  </div>
-  
-  <!-- Find videojuego with platform -->
-  <form (submit)="getVideojuegosByPlatform($event, plataforma.value)">
-    <label for="plataforma">Plataforma:</label>
-    <input type="text" id="plataforma" #plataforma>
-    <button type="submit">Get Videojuegos</button>
-  </form>
-  
-  <div *ngIf="errorMessage && !videojuegos">
-    <p>{{ errorMessage }}</p>
-  </div>
-  
-  <div *ngIf="videojuegosFilterPlatform">
-    <ul>
-      <li *ngFor="let videojuego of videojuegosFilterPlatform">
-        {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
-      </li>
-    </ul>
-  </div>
-  
-  <!-- Find videojuego with name -->
-  <form (submit)="getVideojuegosByName($event, nombre.value)">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" #nombre>
-    <button type="submit">Get Videojuegos</button>
-  </form>
-  
-  <div *ngIf="errorMessage && !videojuegos">
-    <p>{{ errorMessage }}</p>
-  </div>
-  
-  <div *ngIf="videojuegosFilterName">
-    <ul>
-      <li *ngFor="let videojuego of videojuegosFilterName">
-        {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
-      </li>
-    </ul>
-  </div>
-  
-  
   <!-- Find videojuego between min and ma price -->
-  <form (submit)="getVideogamesByPriceRange($event, minPrice.value, maxPrice.value)">
+  <!-- <form (submit)="getVideogamesByPriceRange(minPrice.value, maxPrice.value)">
     <label for="minPrice">Min Price:</label>
     <input type="number" id="minPrice" #minPrice>
     <label for="maxPrice">Max Price:</label>
@@ -124,8 +148,8 @@
         {{ videojuego.nombreVideojuego }} - {{ videojuego.descripcion }}
       </li>
     </ul>
-  </div>
-    
+  </div> -->
+  
   
   <!-- Create videojuego -->
   <form (ngSubmit)="createVideojuego()">
@@ -202,6 +226,26 @@
   
   <button (click)="createPedido()">Crear Pedido</button>
   <button (click)="clearCart()">Vaciar carrito</button>
+
+  <div>
+    <h2>Simulate Payment</h2>
+    <form (submit)="createTransaction()">
+      <div>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" [(ngModel)]="amount" name="amount" required>
+      </div>
+      <button type="submit">Submit Payment</button>
+    </form>
+
+
+    <div *ngIf="response">
+      <h3>Payment Response</h3>
+      <p>Status: {{ response.status }}</p>
+      <p>Transaction ID: {{ response.transactionId }}</p>
+      <p>Amount: {{ response.amount }}</p>
+      <p>Message: {{ response.message }}</p>
+    </div>
+  </div>
   
   <button (click)="logout()">Cerrar sesión</button>
 
