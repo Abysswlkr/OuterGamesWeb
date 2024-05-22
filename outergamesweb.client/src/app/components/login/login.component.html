@@ -1,32 +1,54 @@
-<!-- <form (submit)="login()">
-    <input [(ngModel)]="credentials.correoElectronico" type="email" placeholder="Correo Electrónico" name="correoElectronico" required />
-    <input [(ngModel)]="credentials.contrasena" type="password" placeholder="Contraseña" name="contrasena" required />
-    <button type="submit">Iniciar Sesión</button>
-  </form> -->
 
-  <div class="container border px-4 px-lg-5" style="height: 100vh;">
-    <div class="row">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <div class="card border-0 shadow rounded-3 my-5" style="height: 100%;">
-          <div class="card-body p-4 p-sm-5 d-flex flex-column justify-content-center">
-            <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
-            <form (submit)="login()">
-              <div class="form-floating mb-3">
-                <input [(ngModel)]="credentials.correoElectronico" name="correoElectronico" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email address</label>
+<section class="h-100 gradient-form mt-5 mb-5">
+  <div class="container py-5 h-100 border">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-10">
+        <div class="card rounded-3 text-black">
+          <div class="row g-0">
+            <div class="col-lg-6">
+              <div class="card-body p-md-5 mx-md-4">
+
+                <div class="text-center">
+                  <img src="https://preview.redd.it/does-anyone-have-a-high-quality-picture-of-the-eye-v0-v840cjayaywa1.png?width=1950&format=png&auto=webp&s=6919d5b8119ad05209103dfe0bbc9c7aea84aefe"
+                    style="width: 185px;" alt="logo">
+                  <h4 class="mt-1 mb-5 pb-1">Outer Games</h4>
+                </div>
+
+                <form (submit)="login()">
+
+                  <div class="form-floating mb-3">
+                    <input [(ngModel)]="credentials.correoElectronico" name="correoElectronico" type="email" class="form-control" id="floatingInput">
+                    <label for="floatingInputUsername">Correo</label>
+                  </div>
+
+                  <div class="form-floating mb-3">
+                    <input [(ngModel)]="credentials.contrasena" name="contrasena" type="password" class="form-control" id="floatingPassword">
+                    <label for="floatingPassword">Contraseña</label>
+                  </div>
+
+                  <div class="text-center pt-1 mb-5 pb-1">
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Iniciar sesión</button>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-center pb-4">
+                    <p class="mb-0 me-2">No tienes cuenta?</p>
+                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-danger" routerLink="/register">Registrate!</button>
+                  </div>
+
+                </form>
+
               </div>
-              <div class="form-floating mb-3">
-                <input [(ngModel)]="credentials.contrasena" name="contrasena" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Password</label>
+            </div>
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+              <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                <h4 class="mb-4">Somos más que videojuegos</h4>
+                <p class="small mb-0">Nuestra misión es realizar la entrega de tus videojuegos de la forma más segura posible, 
+                                      que disfrutes de tus tiempos y de las aventuras y experiencias por venir.</p>
               </div>
-              <div class="d-grid">
-                <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Iniciar sesión</button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
-  
+</section>

@@ -1,0 +1,22 @@
+
+  .card-img-left {
+    width: 45%;
+    background: scroll center url('https://cdn.vox-cdn.com/thumbor/t_zL8Qm1_4RrJTlfQvp7GcdQnLY=/0x0:1858x1115/1200x675/filters:focal(781x410:1077x706)/cdn.vox-cdn.com/uploads/chorus_image/image/69933335/outer_wilds_dlc.0.png');
+    background-size: cover;
+  }
+  
+  .btn-login {
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .btn-google {
+    color: white !important;
+    background-color: #ea4335;
+  }
+  
+  .btn-facebook {
+    color: white !important;
+    background-color: #3b5998;
+  }

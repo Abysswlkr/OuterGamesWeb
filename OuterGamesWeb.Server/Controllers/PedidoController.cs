@@ -40,6 +40,20 @@ namespace OuterGamesWeb.Server.Controllers
             return pedido;
         }
 
+        // GET: pedidoController/GetOrderById/5
+        [HttpGet("GetOrdersByUserId/{id}")]
+        public async Task<ActionResult<IEnumerable<Pedido>>> GetPedidosByUser(int id)
+        {
+            var pedidos = await _context.Pedidos.Where(p => p.Idusuario == id).ToListAsync();
+
+            if (pedidos == null || pedidos.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return pedidos;
+        }
+
         //POST: pedidoController/CreateOrder/number
         [HttpPost("CreateOrder")]
         public async Task<ActionResult<Pedido>> PostPedido(Pedido pedido)

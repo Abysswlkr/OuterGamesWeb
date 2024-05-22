@@ -1,14 +1,14 @@
 <!-- navegation bar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container px-5">
-        <a class="navbar-brand" href="#!">Outer Games</a>
+        <a class="navbar-brand" routerLink="/landing">Outer Games</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#!">Inicio</a>
+                    <a class="nav-link active" aria-current="page" routerLink="/landing">Inicio</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/videogames">Videojuegos</a>
@@ -16,16 +16,38 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#!">Servicios</a>
                 </li>
-                <li class="nav-item dropdown">
+
+                <ng-template #notAuthenticated>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" routerLink="/login">Iniciar sesión</a></li>
+                        <li><a class="dropdown-item" routerLink="/register">Registro</a></li>
+                      </ul>
+                    </li>
+                </ng-template>
+
+                <li class="nav-item dropdown" *ngIf="isAuthenticated(); else notAuthenticated">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-box-arrow-in-right"></i>
+                        <i class="bi bi-list"></i>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" routerLink="/login">Iniciar sesión</a></li>
-                      <li><a class="dropdown-item" routerLink="/register">Registro</a></li>
+                        <li><a class="dropdown-item" routerLink="/profile">Tu perfil</a></li>
+                        <li><a class="dropdown-item" routerLink="/management">Management</a></li>
+                        <li><a class="dropdown-item" routerLink="/landing" (click)="logout()">Cerrar sesión</a></li>
                     </ul>
-                  </li>
-          
+                </li>
+
+                <li class="nav-item" *ngIf="isAuthenticated();">
+                    <i class="bi bi-cart nav-link position-relative" routerLink="/cart">
+                            <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ totalItems | async }}
+                            <span class="visually-hidden">videojuegos  en carrito</span>
+                          </span>
+                    </i>
+                </li>
             </ul>
         </div>
     </div>

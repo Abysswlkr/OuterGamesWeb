@@ -17,6 +17,7 @@ export class CartService {
 
   private cartSubject = new BehaviorSubject<Cart>(this.cart);
   cart$ = this.cartSubject.asObservable();
+  lastCart$ = this.cartSubject.asObservable();
 
   constructor(private authService: AuthService) { }
 

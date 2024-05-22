@@ -15,6 +15,11 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { VideogameComponent } from './components/videogame/videogame.component';
 import { ManagementComponent } from './components/management/management.component';
+import { CartComponent } from './components/cart/cart.component';
+import { ProfileComponent } from './components/profile/profile.component';
+
+//ngx-angular bootstrap
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -28,6 +33,8 @@ import { ManagementComponent } from './components/management/management.componen
     FooterComponent,
     VideogameComponent,
     ManagementComponent,
+    CartComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
@@ -40,7 +47,8 @@ import { ManagementComponent } from './components/management/management.componen
         allowedDomains: ['https://localhost:7017'],
         disallowedRoutes: ['https://localhost:7017/Auth']
       }
-    })
+    }),
+    TooltipModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

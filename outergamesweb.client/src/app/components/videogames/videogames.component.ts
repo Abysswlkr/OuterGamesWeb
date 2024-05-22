@@ -365,8 +365,6 @@ export class VideogamesComponent implements OnInit{
 
     this.pedidoService.createDetallesPedido(detalles).subscribe(response => {
       console.log('Detalles del pedido creado', response);
-      console.log('aquí!!!!!!',)
-
     }, error => {
       console.error('Error al crear los detalles del pedido', error);
     });

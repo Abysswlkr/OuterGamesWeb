@@ -1,5 +1,5 @@
 <!-- Product section -->
-<section class="py-5">
+<section class="py-5 m-5 border">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center" *ngIf="videojuego">
             <div class="col-md-6" >
@@ -16,7 +16,7 @@
                 <p class="lead">{{ videojuego.descripcion }}</p>
                 <div class="d-flex">
                     <input id="inputQuantity" class="form-control text-center me-3" type="num" value="1" style="max-width: 3rem">
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                    <button class="btn btn-outline-dark flex-shrink-0" type="button" (click)="addToCart(videojuego)">
                         <i class="bi-cart-fill me-1"></i>
                         Añadir al carrito
                     </button>

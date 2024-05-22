@@ -39,6 +39,10 @@ export class PedidosService {
     );
   }
 
+  getPedidosByUser(userId: number): Observable<Pedido[]> {
+    return this.http.get<Pedido[]>(`${this.apiUrl}/GetOrdersByUserId/${userId}`);
+  }
+
   //Detalles pedido
 
 

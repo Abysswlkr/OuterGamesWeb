@@ -1,0 +1,126 @@
+<section class="vh-100">
+    <div class="container border mt-5">
+      <div class="row mb-5 mt-5">
+        <div class="col-lg-4">
+        <!-- user presentation -->
+          <div class="card mb-4" *ngIf="usuario">
+            <div class="card-body text-center">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3">{{ usuario.nombre }}</h5>
+            </div>
+          </div>
+          <!-- profile menu -->
+          <div class="card mb-4 mb-lg-0">
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush rounded-3" (mouseenter)="toggleHover(true, 1)" (mouseleave)="toggleHover(false, 1)" (click)="onClick(1)">
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3" [ngClass]="{'hovered': isHovered1}">
+                  <i class="bi bi-person text-danger"></i>
+                  <p class="mb-0">Tus datos</p>
+                </li>
+              </ul>
+              <ul class="list-group list-group-flush rounded-3" (mouseenter)="toggleHover(true, 2)" (mouseleave)="toggleHover(false, 2)" (click)="onClick(2)">
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3" [ngClass]="{'hovered': isHovered2}">
+                  <i class="bi bi-bag-check text-danger"></i>
+                  <p class="mb-0">Pedidos</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- user data section -->
+        <div class="col-lg-8 " *ngIf="userData">
+          <div class="card mb-4" *ngIf="usuario">
+            <div class="card-body ">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 h5">Tus datos</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Nombre</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ usuario.nombre }}
+                      <i class="bi bi-info-square"
+                              tooltip="Si desea cambiar su nombre, porfavor, contáctese con la administración.">
+                      </i>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Correo</p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="text-muted mb-0">{{ usuario.correoElectronico }}</p>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-warning">Cambiar correo</button>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Dirección</p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="text-muted mb-0">{{ usuario.direccionEnvio }}</p>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-warning">Cambiar dirección</button>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Contraseña</p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="text-muted mb-0">{{ usuario.contrasena }}</p>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-warning">Cambiar contraseña</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pedidos section -->
+        <div class="col-lg-8" *ngIf="orderData">
+          <div class="card h-100 mb-4">
+            <div class="card-body ">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 h5">Pedidos</p>
+                </div>
+              </div>
+              <hr>
+              <div>
+                <div class="row mb-3" *ngFor="let pedido of pedidos">
+                  <div class="col-sm-3">
+                    <p class="mb-0">{{ pedido.idpedido }}</p>
+                  </div>
+                  <div class="col-sm-3">
+                    <p class="text-muted mb-0">{{ pedido.fechaPedido }}</p>
+                  </div>
+                  <div class="col-sm-3">
+                    <p class="text-muted mb-0">{{ pedido.estadoPedido }}</p>
+                  </div>
+                  <div class="col-sm-3">
+                    <button class="btn btn-info" (click)="createTransaction()"><i class="bi bi-credit-card"></i> Realizar pago #{{ pedido.idpedido }}</button>
+                  </div>
+                </div>                
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

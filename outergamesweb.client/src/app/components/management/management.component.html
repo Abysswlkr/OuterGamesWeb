@@ -21,4 +21,67 @@
         <button (click)="deleteVideojuego(videojuego.idvideojuego)">Delete</button> <!-- New Delete button -->
       </td>
     </tr>
-  </table>
+</table>
+
+<!-- Create videojuego -->
+<form (ngSubmit)="createVideojuego()">
+  <label for="nombreVideojuego">Nombre del Videojuego:</label><br>
+  <input type="text" id="nombreVideojuego" [(ngModel)]="newVideojuegoForm.nombreVideojuego" name="nombreVideojuego"><br>
+  
+  <label for="descripcion">Descripción:</label><br>
+  <textarea id="descripcion" name="descripcion" [(ngModel)]="newVideojuegoForm.descripcion"></textarea><br>
+  
+  <label for="precio">Precio:</label><br>
+  <input type="number" id="precio" name="precio" [(ngModel)]="newVideojuegoForm.precio"><br>
+  
+  <label for="cantidadStock">Cantidad en Stock:</label><br>
+  <input type="number" id="cantidadStock" name="cantidadStock" [(ngModel)]="newVideojuegoForm.cantidadStock"><br>
+  
+  <label for="plataforma">Plataforma:</label><br>
+  <input type="text" id="plataforma" name="plataforma" [(ngModel)]="newVideojuegoForm.plataforma"><br>
+  
+  <label for="genero1">Género 1:</label><br>
+  <input type="text" id="genero1" name="genero1" [(ngModel)]="newVideojuegoForm.genero1"><br>
+  
+  <label for="genero2">Género 2:</label><br>
+  <input type="text" id="genero2" name="genero2" [(ngModel)]="newVideojuegoForm.genero2"><br>
+  
+  <label for="genero3">Género 3:</label><br>
+  <input type="text" id="genero3" name="genero3" [(ngModel)]="newVideojuegoForm.genero3"><br>
+  
+  <label for="imagen">URL de la Imagen:</label><br>
+  <input type="text" id="imagen" name="imagen" [(ngModel)]="newVideojuegoForm.imagen"><br>
+  
+  <button type="submit">Crear videojuego</button>
+</form>
+
+<!-- Edit videjuego -->
+<form (submit)="submitEdit()">
+  <label for="nombreVideojuego">Nombre del Videojuego:</label><br>
+  <input type="text" id="nombreVideojuego" [(ngModel)]="editVideojuegoForm.nombreVideojuego" name="nombreVideojuego"><br>
+  
+  <label for="descripcion">Descripción:</label><br>
+  <textarea id="descripcion" name="descripcion" [(ngModel)]="editVideojuegoForm.descripcion"></textarea><br>
+  
+  <label for="precio">Precio:</label><br>
+  <input type="number" id="precio" name="precio" [(ngModel)]="editVideojuegoForm.precio"><br>
+  
+  <label for="cantidadStock">Cantidad en Stock:</label><br>
+  <input type="number" id="cantidadStock" name="cantidadStock" [(ngModel)]="editVideojuegoForm.cantidadStock"><br>
+  
+  <label for="plataforma">Plataforma:</label><br>
+  <input type="text" id="plataforma" name="plataforma" [(ngModel)]="editVideojuegoForm.plataforma"><br>
+  
+  <label for="genero1">Género 1:</label><br>
+  <input type="text" id="genero1" name="genero1" [(ngModel)]="editVideojuegoForm.genero1"><br>
+  
+  <label for="genero2">Género 2:</label><br>
+  <input type="text" id="genero2" name="genero2" [(ngModel)]="editVideojuegoForm.genero2"><br>
+  
+  <label for="genero3">Género 3:</label><br>
+  <input type="text" id="genero3" name="genero3" [(ngModel)]="editVideojuegoForm.genero3"><br>
+  
+  <label for="imagen">URL de la Imagen:</label><br>
+  <input type="text" id="imagen" name="imagen" [(ngModel)]="editVideojuegoForm.imagen"><br>
+  <button type="submit">Editar Juego</button>
+</form>

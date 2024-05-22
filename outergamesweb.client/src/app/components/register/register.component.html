@@ -1,9 +1,59 @@
-<form (submit)="register()">
-  <input [(ngModel)]="usuario.nombre" placeholder="Nombre" name="nombre" required />
-  <input [(ngModel)]="usuario.correoElectronico" type="email" placeholder="Correo Electrónico" name="correoElectronico" required />
-  <input [(ngModel)]="usuario.contrasena" type="password" placeholder="Contraseña" name="contrasena" required />
-  <input [(ngModel)]="usuario.direccionEnvio" placeholder="Dirección de Envío" name="direccionEnvio" required />
-  <button type="submit">Registrar</button>
-</form>
 
-  
+<section class="vh-100 mt-3 mb-3">
+  <div class="container h-100 border">
+    <div class="row">
+      <div class="col-lg-10 col-xl-9 mx-auto">
+        <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
+          <div class="card-img-left d-none d-md-flex">
+            <!-- Background image for card set in CSS! -->
+          </div>
+          <div class="card-body p-4 p-sm-5">
+            <h5 class="card-title text-center mb-5 fw-light fs-5">Registro</h5>
+            <form (submit)="register()">
+
+              <div class="form-floating mb-3">
+                <input type="text" [(ngModel)]="usuario.nombre" class="form-control" name="nombre" required/>
+                <label for="floatingInputUsername">Nombre</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input type="email" [(ngModel)]="usuario.correoElectronico" class="form-control" name="correoElectronicoRegistro" required/>
+                <label for="floatingInputEmail">Email address</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input type="text" [(ngModel)]="usuario.direccionEnvio" class="form-control" name="direccionEnvio" required/>
+                <label for="floatingInputUsername">Dirección de envío</label>
+              </div>
+
+              <hr>
+
+              <div class="form-floating mb-3">
+                <input type="password" [(ngModel)]="usuario.contrasena" class="form-control" name="contrasena" required/>
+                <label for="floatingPassword">Contraseña</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input type="password" [(ngModel)]="repeatContrasena" class="form-control" name="contrasena" required/>
+                <label for="floatingPasswordConfirm">Repetir contraseña</label>
+              </div>
+
+              <div class="form-check d-flex mb-3">
+                <input class="form-check-input me-2" type="checkbox" [(ngModel)]="agreedToTerms" name="agreedToTerms" required/>
+                <label class="form-check-label" for="form2Example3">
+                  Estoy de acuerdo con los <a href="#!">Términos del servicio</a>
+                </label>
+              </div>
+
+              <div class="d-grid mb-2">
+                <button class="btn btn-lg btn-primary btn-login fw-bold text-uppercase" type="submit">Registrarte</button>
+              </div>
+
+              <a class="d-block text-center mt-2 small" routerLink="/login">Tienes una cuenta? Inicia Sesión</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

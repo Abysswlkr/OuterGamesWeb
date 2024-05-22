@@ -26,16 +26,20 @@ namespace OuterGamesWeb.Server.Controllers
         {
             try
             {
-                var videojuegos = await _context.Videojuegos.ToListAsync();
+                var videojuegos = await _context.Videojuegos
+                                                .Where(v => v.CantidadStock > 0)
+                                                .ToListAsync();
+
                 if (!videojuegos.Any())
                 {
-                    return NotFound("Videojugos no disponibles");
+                    return NotFound("Videojuegos no disponibles");
                 }
+
                 return Ok(videojuegos);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
