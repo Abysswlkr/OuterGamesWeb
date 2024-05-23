@@ -60,7 +60,7 @@
                   <p class="text-muted mb-0">{{ usuario.correoElectronico }}</p>
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-warning">Cambiar correo</button>
+                  <button type="button" class="btn btn-warning" (click)="openModal1(templateEmail)">Cambiar correo</button>
                 </div>
               </div>
               <hr>
@@ -72,7 +72,7 @@
                   <p class="text-muted mb-0">{{ usuario.direccionEnvio }}</p>
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-warning">Cambiar dirección</button>
+                  <button type="button" class="btn btn-warning" (click)="openModal2(templateDireccion)">Cambiar dirección</button>
                 </div>
               </div>
               <hr>
@@ -84,7 +84,7 @@
                   <p class="text-muted mb-0">{{ usuario.contrasena }}</p>
                 </div>
                 <div class="col-sm-3">
-                    <button class="btn btn-warning">Cambiar contraseña</button>
+                  <button type="button" class="btn btn-warning" (click)="openModal3(templatePassword)">Cambiar contraseña</button>
                 </div>
               </div>
             </div>
@@ -101,7 +101,7 @@
                 </div>
               </div>
               <hr>
-              <div>
+              <div class="scrollable-container">
                 <div class="row mb-3" *ngFor="let pedido of pedidos">
                   <div class="col-sm-3">
                     <p class="mb-0">{{ pedido.idpedido }}</p>
@@ -124,3 +124,53 @@
       </div>
     </div>
   </section>
+
+
+
+<!-- Template para actualizar el correo electrónico -->
+<ng-template #templateEmail>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Editar Email</h4>
+    <!-- Botón para actualizar email -->
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- Input para ingresar el nuevo email -->
+    <input type="email" [(ngModel)]="newEmail" placeholder="Nuevo Email">
+    <button (click)="updateEmail()">update</button>
+  </div>
+</ng-template>
+
+<ng-template #templateDireccion>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Editar Dirección</h4>
+    <!-- Botón para actualizar email -->
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- Input para ingresar el nuevo email -->
+    <input type="text" [(ngModel)]="newDireccion" placeholder="Nueva dirección">
+    <button (click)="updateDireccion()">update</button>
+  </div>
+</ng-template>
+
+<ng-template #templatePassword>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Editar Contraseña</h4>
+    <!-- Botón para actualizar email -->
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- Input para ingresar el nuevo email -->
+    <input type="text" [(ngModel)]="newPassword" placeholder="Nueva contraseña">
+    <button (click)="updatePassword()">update</button>
+  </div>
+</ng-template>
+
+

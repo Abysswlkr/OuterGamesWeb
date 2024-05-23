@@ -99,7 +99,7 @@ namespace OuterGamesWeb.Server.Controllers
 
                 if (usuario.Contrasena != null)
                 {
-                    usuario.Contrasena = Encryptacion.GetSHA256(usuario.Contrasena);
+                    usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
                     _context.Update(usuario);
                     _context.SaveChanges();
                     return Ok(usuario);
@@ -109,6 +109,72 @@ namespace OuterGamesWeb.Server.Controllers
                     return BadRequest("Contraseña no ingresada correctamente");
                 }
 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("EditUser/{id}/UpdateEmail")]
+        public ActionResult UpdateEmail(int id, [FromBody] string correoElectronico)
+        {
+            try
+            {
+                var usuario = _context.Usuarios.Find(id);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                usuario.CorreoElectronico = correoElectronico;
+                _context.Update(usuario);
+                _context.SaveChanges();
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("EditUser/{id}/UpdateAddress")]
+        public ActionResult UpdateAddress(int id, [FromBody] string direccionEnvio)
+        {
+            try
+            {
+                var usuario = _context.Usuarios.Find(id);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                usuario.DireccionEnvio = direccionEnvio;
+                _context.Update(usuario);
+                _context.SaveChanges();
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("EditUser/{id}/UpdatePassword")]
+        public ActionResult UpdatePassword(int id, [FromBody] string contrasena)
+        {
+            try
+            {
+                var usuario = _context.Usuarios.Find(id);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(contrasena);
+                _context.Update(usuario);
+                _context.SaveChanges();
+                return Ok(usuario);
             }
             catch (Exception ex)
             {

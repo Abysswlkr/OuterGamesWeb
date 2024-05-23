@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { PedidosService } from '../../services/pedidos.service';
 import { Pedido } from '../../interfaces/pedidos';
 import { Usuario } from '../../interfaces/usuario';
@@ -8,6 +8,7 @@ import { Transaccion } from '../../interfaces/transacciones';
 import { Observable } from 'rxjs';
 import { Cart } from '../../interfaces/cart';
 import { CartService } from '../../services/cart.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 interface ListItem {
   icon: string;
@@ -31,7 +32,7 @@ export class ProfileComponent  implements OnInit{
   pedidos: Pedido[] = [];
 
   //user data
-  usuario: Usuario | undefined;
+  usuario!: Usuario 
 
   //Payment
   amount!: number;
@@ -48,11 +49,21 @@ export class ProfileComponent  implements OnInit{
     montoTransaccion: 0,
     estadoTransaccion: 'Realizada'
   };
+
+  //Edit user data
+  userId: number = 0
+  newEmail: string = '';
+  newDireccion: string = '';
+  newPassword: string = '';
+
+  //Modal
+  modalRef?: BsModalRef;
   
   constructor(private pedidoService: PedidosService, 
               private usuarioService: UsuariosService,
               private transaccionService: TransaccionService,
-              private cartService: CartService) {
+              private cartService: CartService,
+              private modalService: BsModalService) {
       
                 this.cart$ = this.cartService.cart$;
   }
@@ -63,6 +74,13 @@ export class ProfileComponent  implements OnInit{
       const userId = parseInt(userIdString, 10);
       this.getPedidosByUser(userId);
       this.getUserAuth(userId);
+
+          // Load user data
+      this.usuarioService.getUserById(userId).subscribe(
+        user => this.usuario = user,
+        error => console.error(error)
+      );
+      this.userId = userId;
     } else {
       console.error('No se encontró el ID de usuario en el almacenamiento local');
     }
@@ -74,6 +92,20 @@ export class ProfileComponent  implements OnInit{
     } else {
       console.error('No se encontró ningún valor asociado a la clave "totalPrecioCart" en localStorage');
     }
+
+  }
+
+  //Modals
+  openModal1(template: TemplateRef<void>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  openModal2(template: TemplateRef<void>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  openModal3(template: TemplateRef<void>) {
+    this.modalRef = this.modalService.show(template);
   }
 
   getPedidosByUser(userId: number): void {
@@ -92,6 +124,40 @@ export class ProfileComponent  implements OnInit{
       }, error => {
         console.error('Error al obtener el usuario:', error);
       });
+  }
+
+  //Edit user data
+  updateEmail() {
+    console.log(this.userId);
+    console.log(this.newEmail)
+    this.usuarioService.updateEmail(this.userId, this.newEmail).subscribe(response => {
+      console.log('Email actualizado:', response);
+      // Aquí puedes manejar la respuesta como desees
+    }, error => {
+      console.error('Error al actualizar el email:', error);
+    });
+  }
+
+  updateDireccion() {
+    console.log(this.userId);
+    console.log(this.newDireccion)
+    this.usuarioService.updateAddress(this.userId, this.newDireccion).subscribe(response => {
+      console.log('Dirección actualizada:', response);
+      // Aquí puedes manejar la respuesta como desees
+    }, error => {
+      console.error('Error al actualizar la Dirección:', error);
+    });
+  }
+
+  updatePassword() {
+    console.log(this.userId);
+    console.log(this.newPassword)
+    this.usuarioService.updatePassword(this.userId, this.newPassword).subscribe(response => {
+      console.log('Contraseña actualizada:', response);
+      // Aquí puedes manejar la respuesta como desees
+    }, error => {
+      console.error('Error al actualizar la contraseña:', error);
+    });
   }
 
   //Transaction (payment) Method

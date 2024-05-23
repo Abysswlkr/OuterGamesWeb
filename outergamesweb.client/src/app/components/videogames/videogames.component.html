@@ -107,29 +107,7 @@
         </ul>
       </nav>
     </div>
-    
 </div>
-
-
-  <div>
-    <h2>Simulate Payment</h2>
-    <form (submit)="createTransaction()">
-      <div>
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" [(ngModel)]="amount" name="amount" required>
-      </div>
-      <button type="submit">Submit Payment</button>
-    </form>
-
-
-    <div *ngIf="response">
-      <h3>Payment Response</h3>
-      <p>Status: {{ response.status }}</p>
-      <p>Transaction ID: {{ response.transactionId }}</p>
-      <p>Amount: {{ response.amount }}</p>
-      <p>Message: {{ response.message }}</p>
-    </div>
-  </div>
 
 
   
