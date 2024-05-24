@@ -47,23 +47,13 @@ export class VideogamesComponent implements OnInit{
   //error
   error = false;
 
-
-
-  
-  //Order
-  public pedido!: Pedido | null;
-
-  //Payment
-  amount!: number;
-  response: any;
-
-  public newTransaction: Transaccion = {
-    idtransaccion: 0,
-    idpedido: 2,
-    fechaTransaccion: new Date().toISOString(),
-    montoTransaccion: 0,
-    estadoTransaccion: 'Realizada'
-  };
+  //Filters
+    //Filters
+    filters = {
+      nombre: '',
+      genero: '',
+      plataforma: '',
+    };
 
   //Remember to take the methods before split the modules
   constructor(private videojuegoService: VideojuegosService, 
@@ -86,6 +76,18 @@ export class VideogamesComponent implements OnInit{
         this.videojuegos = [];
       }
     );
+  }
+
+  filteredVideojuegos() {
+    return this.videojuegos.filter(videojuego => {
+      const matchesNombre = videojuego.nombreVideojuego.toLowerCase().includes(this.filters.nombre.toLowerCase());
+      const matchesGenero = (videojuego.genero1.toLowerCase().includes(this.filters.genero.toLowerCase()) ||
+                             videojuego.genero2.toLowerCase().includes(this.filters.genero.toLowerCase()) ||
+                             videojuego.genero3.toLowerCase().includes(this.filters.genero.toLowerCase()));
+      const matchesPlataforma = videojuego.plataforma.toLowerCase().includes(this.filters.plataforma.toLowerCase());
+
+      return matchesNombre && matchesGenero && matchesPlataforma;
+    });
   }
 
   getVideojuegoById(id: number) {

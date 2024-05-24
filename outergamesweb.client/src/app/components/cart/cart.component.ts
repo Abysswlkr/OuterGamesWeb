@@ -37,6 +37,11 @@ export class CartComponent implements OnInit{
       imagen: ''
     };
 
+    //Alert
+    showAlert: boolean = false;
+    alertMessage: string = '';
+    alertType: string = 'success';
+
   constructor (private cartService: CartService, private pedidoService: PedidosService, private videojuegoService: VideojuegosService) {
     this.cart$ = this.cartService.cart$;
 
@@ -113,6 +118,14 @@ export class CartComponent implements OnInit{
   
       this.pedidoService.createPedido(pedido).subscribe(response => {
         console.log('Pedido creado', response);
+
+        this.alertMessage = 'Se ha creado tu pedido';
+        this.alertType = 'success';
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
+
         console.log(response.idpedido);
         this.createDetails(response);
         localStorage.setItem('idPedido', JSON.stringify(response.idpedido));

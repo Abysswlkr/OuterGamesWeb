@@ -1,4 +1,3 @@
-
 <section class="h-100 h-custom">
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -10,11 +9,13 @@
                 <div class="p-5">
                     <div class="d-flex justify-content-between align-items-center mb-6">
                       <h1 class="fw-bold mb-0 text-black">Carrito de compra</h1>
-                      <button (click)="clearCart()" class="btn btn-danger mb-0">Vaciar carrito</button>
+                      <button (click)="clearCart()" class="btn btn-danger mt-3">Vaciar carrito</button>
                     </div>
-                    <hr class="my-4">
-                  
+                      <hr class="my-4">
                     <div class="scrollable-container">
+                      <div *ngIf="(cart$ | async)?.videojuegos?.length === 0" class="d-flex justify-content-center align-items-center" style="height: 300px;">
+                        <p class="display-6 text-center">No se han agregado productos al carrito</p>
+                      </div>
                       <div class="row mb-4 d-flex justify-content-between align-items-center" *ngFor="let videojuego of (cart$ | async)?.videojuegos">
                         <div class="col-md-2 col-lg-2 col-xl-2">
                           <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img5.webp"
@@ -55,10 +56,13 @@
                     <h5 class="text-uppercase">Precio total</h5>
                     <h5 *ngIf="totalPrecio !== undefined">{{ totalPrecio | currency }}</h5>
                 </div>
-
-                <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-block btn-lg"
-                    data-mdb-ripple-color="dark" (click)="createPedido()">Realizar pedido</button>
-
+                
+                <div *ngIf="cart$ | async as cart">
+                  <div *ngIf="cart && cart.videojuegos && cart.videojuegos.length > 0" class="d-grid gap-2">
+                    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg"
+                            data-mdb-ripple-color="dark" (click)="createPedido()">Realizar pedido</button>
+                  </div>
+                </div>                                           
                 </div>
             </div>
             </div>
@@ -68,3 +72,9 @@
     </div>
 </div>
 </section>
+
+<div class="alert-container" *ngIf="showAlert">
+  <alert [type]="alertType" dismissOnTimeout="5000">
+    {{ alertMessage }}
+  </alert>
+</div>

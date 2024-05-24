@@ -52,3 +52,9 @@
         </div>
     </div>
 </nav>
+
+<div class="alert-container" *ngIf="showAlert">
+    <alert [type]="alertType" dismissOnTimeout="5000">
+      {{ alertMessage }}
+    </alert>
+</div>

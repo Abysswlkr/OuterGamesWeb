@@ -48,6 +48,30 @@ export class ManagementComponent implements OnInit {
   alertMessage: string = '';
   alertType: string = 'success';
 
+  //Filters
+  filters = {
+    nombre: '',
+    genero: '',
+    plataforma: '',
+    id: ''
+  };
+
+  //List of Genres
+  generos: string[] = [
+    'Acción', 'Aventura', 'Rol (RPG)', 'Estrategia', 'Simulación',
+    'Deportes', 'Carreras', 'Puzzle', 'Plataformas', 'Terror',
+    'Disparos en primera persona (FPS)', 'Disparos en tercera persona (TPS)', 
+    'Lucha', 'Música y Ritmo', 'Educativos'
+  ];
+
+  //List of plataforms
+  plataformas: string[] = [
+    'PC', 'PS4', 'PS5', 'Xbox One', 'Xbox Series X', 
+    'Nintendo Switch', 'iOS', 'Android', 'VR', 'Mac'
+  ];
+
+
+
 
   constructor(private videojuegoService: VideojuegosService, private modalService: BsModalService) {}
 
@@ -73,6 +97,19 @@ export class ManagementComponent implements OnInit {
         this.videojuegos = [];
       }
     );
+  }
+
+  filteredVideojuegos() {
+    return this.videojuegos.filter(videojuego => {
+      const matchesNombre = videojuego.nombreVideojuego.toLowerCase().includes(this.filters.nombre.toLowerCase());
+      const matchesGenero = (videojuego.genero1.toLowerCase().includes(this.filters.genero.toLowerCase()) ||
+                             videojuego.genero2.toLowerCase().includes(this.filters.genero.toLowerCase()) ||
+                             videojuego.genero3.toLowerCase().includes(this.filters.genero.toLowerCase()));
+      const matchesPlataforma = videojuego.plataforma.toLowerCase().includes(this.filters.plataforma.toLowerCase());
+      const matchesId = videojuego.idvideojuego.toString().includes(this.filters.id);
+
+      return matchesNombre && matchesGenero && matchesPlataforma && matchesId;
+    });
   }
 
   openModalcreateVideogame(template: TemplateRef<void>) {

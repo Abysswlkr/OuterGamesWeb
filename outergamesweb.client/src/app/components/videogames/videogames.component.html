@@ -4,8 +4,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Buscar por nombre" [(ngModel)]="searchTerm">
-          <button class="btn btn-outline-secondary" type="button" (click)="getVideojuegosByName()">Buscar</button>
+            <input type="text" class="form-control" placeholder="Buscar por nombre" [(ngModel)]="filters.nombre"/>
         </div>
       </div>
     </div>
@@ -21,9 +20,9 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <select id="genreSelect" class="form-select" (change)="getVideojuegosByGenre($event)">
+                  <select id="genreSelect" class="form-select" [(ngModel)]="filters.genero">
                     <option value="">Seleccionar género</option>
-                    <option *ngFor="let genero of generos" [value]="genero">{{ genero }}</option>
+                    <option *ngFor="let genero of generos">{{ genero }}</option>
                   </select>
                 </div>
               </div>
@@ -31,10 +30,11 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <select id="platformSelect" class="form-select" (change)="getVideojuegosByPlatform($event)">
+                  <select id="platformSelect" class="form-select" [(ngModel)]="filters.plataforma">
                     <option value="">Seleccionar plataforma</option>
-                    <option *ngFor="let plataforma of plataformas" [value]="plataforma">{{ plataforma }}</option>
+                    <option *ngFor="let plataforma of plataformas">{{ plataforma }}</option>
                   </select>
+                </div>
                 </div>
               </div>
               <div class="row border">
@@ -46,7 +46,7 @@
                   <label for="maxPrice" class="form-label">Precio máximo:</label>
                   <input type="number" class="form-control" id="maxPrice" [(ngModel)]="maxPrice" name="maxPrice">
                 </div>
-                <div class="mt-2 mb">
+                <div class="mt-2 mb-3">
                   <button class="btn btn-primary" (click)="getVideogamesByPriceRange()">Filtrar</button>
                 </div>
               </div>  
@@ -59,12 +59,13 @@
     <hr class="mt-5">
 
     <section class="py-5" >
-      <div *ngIf="error">
-        <p>No se encontraron resultados.</p>
+
+      <div *ngIf="filteredVideojuegos().length === 0" class="d-flex justify-content-center align-items-center" style="height: 200px;">
+        <p class="display-4 text-center">No se encontraron resultados.</p>
       </div>
-      <div class="container px-4 px-lg-5 mt-5" *ngIf="!error && videojuegos.length > 0">
+      <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-          <div class="col mb-5" *ngFor="let videojuego of videojuegos">
+          <div class="col mb-5" *ngFor="let videojuego of filteredVideojuegos()">
             <div class="card h-100">
               <!-- Product image -->
               <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="...">

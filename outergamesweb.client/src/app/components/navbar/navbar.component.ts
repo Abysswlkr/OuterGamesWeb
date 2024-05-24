@@ -13,6 +13,11 @@ export class NavbarComponent {
   cart$: Observable<Cart>;
   totalItems: Observable<number>;
 
+  //Alert
+  showAlert: boolean = false;
+  alertMessage: string = '';
+  alertType: string = 'success';
+
   constructor( private authService: AuthService , private auth: AuthService, private cartService: CartService) {
     this.cart$ = this.cartService.cart$;
 
@@ -29,6 +34,12 @@ export class NavbarComponent {
 
   logout() {
     this.auth.logout();
+    this.alertMessage = 'La sesión fue finalizada';
+    this.alertType = 'warning';
+    this.showAlert = true;
+    setTimeout(() => {
+      this.showAlert = false;
+    }, 5000);
     console.log('Sesión finalizada.')
   }
 }

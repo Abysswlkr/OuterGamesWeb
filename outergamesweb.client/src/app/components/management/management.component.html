@@ -1,26 +1,39 @@
 <div class="container border mt-5 mb-5">
-  <div class="col-md-3 mt-5">
+  <div class="col-md-3 mt-3">
     <button class="btn btn-primary" (click)="openModalcreateVideogame(templateCreate)">Agregar producto</button>
   </div>
   <div class="row mb-3 mt-3">
     <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Buscar por nombre">
+      <input type="text" class="form-control" placeholder="Buscar por nombre" [(ngModel)]="filters.nombre">
     </div>
     <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Buscar por género">
+        <div class="mb-3">
+          <select id="genreSelect" class="form-select" [(ngModel)]="filters.genero">
+            <option value="">Seleccionar género</option>
+            <option *ngFor="let genero of generos">{{ genero }}</option>
+          </select>
+        </div>
     </div>
     <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Buscar por plataforma">
+      <div class="mb-3">
+        <select id="platformSelect" class="form-select" [(ngModel)]="filters.plataforma">
+          <option value="">Seleccionar plataforma</option>
+          <option *ngFor="let plataforma of plataformas">{{ plataforma }}</option>
+        </select>
+      </div>
     </div>
     <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Buscar por ID">
+      <input type="text" class="form-control" placeholder="Buscar por ID" [(ngModel)]="filters.id">
     </div>
   </div>
-  
+
+  <div *ngIf="filteredVideojuegos().length === 0" class="d-flex justify-content-center align-items-center" style="height: 200px;">
+    <p class="display-4 text-center">No se encontraron resultados.</p>
+  </div>
+
   <alert *ngIf="showAlert" [type]="alertType" dismissOnTimeout="5000">
     {{ alertMessage }}
   </alert>
-  
 
   <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
     <table class="table mt-2 mb-5">
@@ -37,7 +50,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let videojuego of videojuegos">
+        <tr *ngFor="let videojuego of filteredVideojuegos()">
           <td>{{ videojuego.idvideojuego }}</td>
           <td>{{ videojuego.nombreVideojuego }}</td>
           <td>{{ videojuego.descripcion }}</td>
@@ -59,154 +72,151 @@
       </tbody>
     </table>
   </div>
-</div>
-
-
 
 <!-- Modal edit videogame -->
-<ng-template #templateEmail>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Editar videojuego</h4>
-    <!-- Botón para actualizar email -->
-    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="modalRef?.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <form class="row g-3" (submit)="submitEdit()">
-      <div class="col-md-6">
-        <label for="nombreVideojuego" class="form-label">Nombre del Videojuego:</label>
-        <input type="text" class="form-control" id="nombreVideojuego" [(ngModel)]="editVideojuegoForm.nombreVideojuego" name="nombreVideojuego">
-      </div>
-      
-      <div class="col-md-6">
-        <label for="descripcion" class="form-label">Descripción:</label>
-        <textarea class="form-control" id="descripcion" name="descripcion" [(ngModel)]="editVideojuegoForm.descripcion"></textarea>
-      </div>
-      
-      <div class="col-md-4">
-        <label for="precio" class="form-label">Precio:</label>
-        <input type="number" class="form-control" id="precio" name="precio" [(ngModel)]="editVideojuegoForm.precio">
-      </div>
-      
-      <div class="col-md-4">
-        <label for="cantidadStock" class="form-label">Cantidad en Stock:</label>
-        <input type="number" class="form-control" id="cantidadStock" name="cantidadStock" [(ngModel)]="editVideojuegoForm.cantidadStock">
-      </div>
-      
-      <div class="col-md-4">
-        <label for="plataforma" class="form-label">Plataforma:</label>
-        <input type="text" class="form-control" id="plataforma" name="plataforma" [(ngModel)]="editVideojuegoForm.plataforma">
-      </div>
-      
-      <div class="col-md-4">
-        <label for="genero1" class="form-label">Género 1:</label>
-        <input type="text" class="form-control" id="genero1" name="genero1" [(ngModel)]="editVideojuegoForm.genero1">
-      </div>
-      
-      <div class="col-md-4">
-        <label for="genero2" class="form-label">Género 2:</label>
-        <input type="text" class="form-control" id="genero2" name="genero2" [(ngModel)]="editVideojuegoForm.genero2">
-      </div>
-      
-      <div class="col-md-4">
-        <label for="genero3" class="form-label">Género 3:</label>
-        <input type="text" class="form-control" id="genero3" name="genero3" [(ngModel)]="editVideojuegoForm.genero3">
-      </div>
-      
-      <div class="col-md-12">
-        <label for="imagen" class="form-label">URL de la Imagen:</label>
-        <input type="text" class="form-control" id="imagen" name="imagen" [(ngModel)]="editVideojuegoForm.imagen">
-      </div>
-      
-      <div class="col-md-12">
-        <button type="submit" class="btn btn-primary">Editar Juego</button>
-      </div>
-    </form>    
-  </div>
-</ng-template>
-
-
-<ng-template #templateDelete>
-  <div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Eliminar Producto</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()">
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>¿Estás seguro de eliminar este producto?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancelar</button>
-        <button type="button" class="btn btn-danger" (click)="deleteVideojuego()">Aceptar</button>
-      </div>
+  <ng-template #templateEmail>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Editar videojuego</h4>
+      <!-- Botón para actualizar email -->
+      <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
     </div>
-  </div>
-</ng-template>
-
-<ng-template #templateCreate>
-  <div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Crear producto</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="row g-3" (ngSubmit)="createVideojuego()">
-          <div class="col-md-6">
-            <label for="nombreVideojuego" class="form-label">Nombre del Videojuego:</label>
-            <input type="text" class="form-control" id="nombreVideojuego" [(ngModel)]="newVideojuegoForm.nombreVideojuego" name="nombreVideojuego">
-          </div>
-          
-          <div class="col-md-6">
-            <label for="descripcion" class="form-label">Descripción:</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" [(ngModel)]="newVideojuegoForm.descripcion"></textarea>
-          </div>
-          
-          <div class="col-md-4">
-            <label for="precio" class="form-label">Precio:</label>
-            <input type="number" class="form-control" id="precio" name="precio" [(ngModel)]="newVideojuegoForm.precio">
-          </div>
-          
-          <div class="col-md-4">
-            <label for="cantidadStock" class="form-label">Cantidad en Stock:</label>
-            <input type="number" class="form-control" id="cantidadStock" name="cantidadStock" [(ngModel)]="newVideojuegoForm.cantidadStock">
-          </div>
-          
-          <div class="col-md-4">
-            <label for="plataforma" class="form-label">Plataforma:</label>
-            <input type="text" class="form-control" id="plataforma" name="plataforma" [(ngModel)]="newVideojuegoForm.plataforma">
-          </div>
-          
-          <div class="col-md-4">
-            <label for="genero1" class="form-label">Género 1:</label>
-            <input type="text" class="form-control" id="genero1" name="genero1" [(ngModel)]="newVideojuegoForm.genero1">
-          </div>
-          
-          <div class="col-md-4">
-            <label for="genero2" class="form-label">Género 2:</label>
-            <input type="text" class="form-control" id="genero2" name="genero2" [(ngModel)]="newVideojuegoForm.genero2">
-          </div>
-          
-          <div class="col-md-4">
-            <label for="genero3" class="form-label">Género 3:</label>
-            <input type="text" class="form-control" id="genero3" name="genero3" [(ngModel)]="newVideojuegoForm.genero3">
-          </div>
-          
-          <div class="col-md-12">
-            <label for="imagen" class="form-label">URL de la Imagen:</label>
-            <input type="text" class="form-control" id="imagen" name="imagen" [(ngModel)]="newVideojuegoForm.imagen">
-          </div>
-          
-          <div class="col-md-12">
-            <button type="submit" class="btn btn-primary">Crear videojuego</button>
-          </div>
-        </form>
+    <div class="modal-body">
+      <form class="row g-3" (submit)="submitEdit()">
+        <div class="col-md-6">
+          <label for="nombreVideojuego" class="form-label">Nombre del Videojuego:</label>
+          <input type="text" class="form-control" id="nombreVideojuego" [(ngModel)]="editVideojuegoForm.nombreVideojuego" name="nombreVideojuego">
+        </div>
         
+        <div class="col-md-6">
+          <label for="descripcion" class="form-label">Descripción:</label>
+          <textarea class="form-control" id="descripcion" name="descripcion" [(ngModel)]="editVideojuegoForm.descripcion"></textarea>
+        </div>
+        
+        <div class="col-md-4">
+          <label for="precio" class="form-label">Precio:</label>
+          <input type="number" class="form-control" id="precio" name="precio" [(ngModel)]="editVideojuegoForm.precio">
+        </div>
+        
+        <div class="col-md-4">
+          <label for="cantidadStock" class="form-label">Cantidad en Stock:</label>
+          <input type="number" class="form-control" id="cantidadStock" name="cantidadStock" [(ngModel)]="editVideojuegoForm.cantidadStock">
+        </div>
+        
+        <div class="col-md-4">
+          <label for="plataforma" class="form-label">Plataforma:</label>
+          <input type="text" class="form-control" id="plataforma" name="plataforma" [(ngModel)]="editVideojuegoForm.plataforma">
+        </div>
+        
+        <div class="col-md-4">
+          <label for="genero1" class="form-label">Género 1:</label>
+          <input type="text" class="form-control" id="genero1" name="genero1" [(ngModel)]="editVideojuegoForm.genero1">
+        </div>
+        
+        <div class="col-md-4">
+          <label for="genero2" class="form-label">Género 2:</label>
+          <input type="text" class="form-control" id="genero2" name="genero2" [(ngModel)]="editVideojuegoForm.genero2">
+        </div>
+        
+        <div class="col-md-4">
+          <label for="genero3" class="form-label">Género 3:</label>
+          <input type="text" class="form-control" id="genero3" name="genero3" [(ngModel)]="editVideojuegoForm.genero3">
+        </div>
+        
+        <div class="col-md-12">
+          <label for="imagen" class="form-label">URL de la Imagen:</label>
+          <input type="text" class="form-control" id="imagen" name="imagen" [(ngModel)]="editVideojuegoForm.imagen">
+        </div>
+        
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-primary">Editar Juego</button>
+        </div>
+      </form>    
+    </div>
+  </ng-template>
+
+
+  <ng-template #templateDelete>
+    <div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar Producto</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro de eliminar este producto?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="deleteVideojuego()">Aceptar</button>
+        </div>
       </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
+
+  <ng-template #templateCreate>
+    <div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Crear producto</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" (ngSubmit)="createVideojuego()">
+            <div class="col-md-6">
+              <label for="nombreVideojuego" class="form-label">Nombre del Videojuego:</label>
+              <input type="text" class="form-control" id="nombreVideojuego" [(ngModel)]="newVideojuegoForm.nombreVideojuego" name="nombreVideojuego">
+            </div>
+            
+            <div class="col-md-6">
+              <label for="descripcion" class="form-label">Descripción:</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" [(ngModel)]="newVideojuegoForm.descripcion"></textarea>
+            </div>
+            
+            <div class="col-md-4">
+              <label for="precio" class="form-label">Precio:</label>
+              <input type="number" class="form-control" id="precio" name="precio" [(ngModel)]="newVideojuegoForm.precio">
+            </div>
+            
+            <div class="col-md-4">
+              <label for="cantidadStock" class="form-label">Cantidad en Stock:</label>
+              <input type="number" class="form-control" id="cantidadStock" name="cantidadStock" [(ngModel)]="newVideojuegoForm.cantidadStock">
+            </div>
+            
+            <div class="col-md-4">
+              <label for="plataforma" class="form-label">Plataforma:</label>
+              <input type="text" class="form-control" id="plataforma" name="plataforma" [(ngModel)]="newVideojuegoForm.plataforma">
+            </div>
+            
+            <div class="col-md-4">
+              <label for="genero1" class="form-label">Género 1:</label>
+              <input type="text" class="form-control" id="genero1" name="genero1" [(ngModel)]="newVideojuegoForm.genero1">
+            </div>
+            
+            <div class="col-md-4">
+              <label for="genero2" class="form-label">Género 2:</label>
+              <input type="text" class="form-control" id="genero2" name="genero2" [(ngModel)]="newVideojuegoForm.genero2">
+            </div>
+            
+            <div class="col-md-4">
+              <label for="genero3" class="form-label">Género 3:</label>
+              <input type="text" class="form-control" id="genero3" name="genero3" [(ngModel)]="newVideojuegoForm.genero3">
+            </div>
+            
+            <div class="col-md-12">
+              <label for="imagen" class="form-label">URL de la Imagen:</label>
+              <input type="text" class="form-control" id="imagen" name="imagen" [(ngModel)]="newVideojuegoForm.imagen">
+            </div>
+            
+            <div class="col-md-12">
+              <button type="submit" class="btn btn-primary">Crear videojuego</button>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+  </ng-template>

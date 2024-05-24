@@ -1,22 +1,32 @@
 <!-- Product section -->
-<section class="py-5 m-5 border">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center" *ngIf="videojuego">
-            <div class="col-md-6" >
-                <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="...">
-            </div>
-            <div class="col-md-6">
-                <h1 class="display-5 fw-bolder">{{ videojuego.nombreVideojuego }}</h1>
-                <div class="fs-5 mb-5">
-                    <span>{{ videojuego.precio | currency}}</span>
+<section class="py-4 m-5">
+    <div class="container border">
+        <div class="px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center" *ngIf="videojuego">
+                <div class="col-md-6" >
+                    <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="...">
                 </div>
-                <div class="fs-5 mb-5">
-                    <span>{{ videojuego.genero1}}, {{ videojuego.genero2}}, {{ videojuego.genero3}}</span>
-                </div>
-                <p class="lead">{{ videojuego.descripcion }}</p>
-                <div class="d-flex">
-                    <input id="inputQuantity" class="form-control text-center me-3" type="num" value="1" style="max-width: 3rem">
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button" (click)="addToCart(videojuego)">
+                <div class="col-md-6">
+                    <h1 class="display-5 fw-bolder">{{ videojuego.nombreVideojuego }}</h1>
+                    <div class="fs-5 mb-5">
+                        <span>{{ videojuego.precio | currency}}</span>
+                    </div>
+                    <div class="fs-5 mb-5">
+                        <span>{{ videojuego.genero1}}, {{ videojuego.genero2}}, {{ videojuego.genero3}}</span>
+                    </div>
+                    <p class="lead">{{ videojuego.descripcion }}</p>
+                    <div class="d-flex">
+                        <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-danger" style="max-width: 3rem" (click)="decreaseQuantity(videojuego.idvideojuego)">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                        <input class="form-control text-center mx-1" type="text" [(ngModel)]="cantidad[videojuego.idvideojuego]" style="max-width: 3rem" readonly>
+                        <button type="button" class="btn btn-success" style="max-width: 3rem" (click)="increaseQuantity(videojuego.idvideojuego)">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                        </div>
+                    </div>                
+                    <button class="btn btn-outline-dark flex-shrink-0 mt-3" type="button" (click)="addToCart(videojuego)">
                         <i class="bi-cart-fill me-1"></i>
                         Añadir al carrito
                     </button>
@@ -25,4 +35,10 @@
         </div>
     </div>
 </section>
+
+<div class="alert-container" *ngIf="showAlert">
+    <alert [type]="alertType" dismissOnTimeout="5000">
+      {{ alertMessage }}
+    </alert>
+</div>
 
