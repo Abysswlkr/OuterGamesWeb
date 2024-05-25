@@ -35,8 +35,11 @@
             <div class="card-body ">
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0 h5">Tus datos</p>
+                  <p class="mb-2 h5">Tus datos</p>
                 </div>
+                <alert *ngIf="showAlert" [type]="alertType" dismissOnTimeout="5000">
+                  {{ alertMessage }}
+                </alert>
               </div>
               <hr>
               <div class="row">
@@ -97,8 +100,11 @@
             <div class="card-body ">
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0 h5">Pedidos</p>
+                  <p class="mb-2 h5">Pedidos</p>
                 </div>
+                <alert *ngIf="showAlert" [type]="alertType" dismissOnTimeout="5000">
+                  {{ alertMessage }}
+                </alert>
               </div>
               <hr>
               <div class="scrollable-container">
@@ -112,8 +118,8 @@
                   <div class="col-sm-3">
                     <p class="text-muted mb-0">{{ pedido.estadoPedido }}</p>
                   </div>
-                  <div class="col-sm-3">
-                    <button class="btn btn-info" (click)="createTransaction()"><i class="bi bi-credit-card"></i> Realizar pago #{{ pedido.idpedido }}</button>
+                  <div class="col-sm-3" *ngIf="pedido.estadoPedido != 'PAGADO'">
+                    <button class="btn btn-info" (click)="openModalTransaction(transaction, pedido)"><i class="bi bi-credit-card"></i> Realizar pago #{{ pedido.idpedido }}</button>
                   </div>
                 </div>                
                 <hr>
@@ -136,10 +142,12 @@
       <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body needs-validation" novalidate>
     <!-- Input para ingresar el nuevo email -->
-    <input type="email" [(ngModel)]="newEmail" placeholder="Nuevo Email">
-    <button (click)="updateEmail()">update</button>
+    <input type="text" class="form-control" id="nombreVideojuego" [(ngModel)]="newEmail" name="nombreVideojuego" required>
+    <div class="col-md-12 mt-2">
+      <button type="submit" class="btn btn-primary" (click)="updateEmail()">Actualizar Correo</button>
+    </div>
   </div>
 </ng-template>
 
@@ -170,6 +178,25 @@
     <!-- Input para ingresar el nuevo email -->
     <input type="text" [(ngModel)]="newPassword" placeholder="Nueva contraseña">
     <button (click)="updatePassword()">update</button>
+  </div>
+</ng-template>
+
+<ng-template #transaction>
+  <div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Pagar</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.hide()">
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Quieres crear la transacción para este pedido?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="createTransaction()">Aceptar</button>
+      </div>
+    </div>
   </div>
 </ng-template>
 

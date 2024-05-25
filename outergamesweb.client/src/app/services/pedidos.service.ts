@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pedido } from '../interfaces/pedidos';
 import { Observable, catchError, of } from 'rxjs';
-import { DetallePedido } from '../interfaces/detalles_pedido';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +42,12 @@ export class PedidosService {
     return this.http.get<Pedido[]>(`${this.apiUrl}/GetOrdersByUserId/${userId}`);
   }
 
-  //Detalles pedido
+  editPedido(id: number, pedido: Pedido): Observable<Pedido> {
+    const url = `${this.apiUrl}/EditOrder/${id}`;
+    return this.http.put<Pedido>(url, pedido).pipe(
+      catchError(this.handleError<Pedido>('editPedido'))
+    );
+  }
 
 
 

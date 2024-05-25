@@ -30,6 +30,8 @@ export class ProfileComponent  implements OnInit{
 
   //Orders list
   pedidos: Pedido[] = [];
+  pedido!: Pedido | null;
+  idPedidoSelected: number = 0
 
   //user data
   usuario!: Usuario 
@@ -50,6 +52,13 @@ export class ProfileComponent  implements OnInit{
     estadoTransaccion: 'Realizada'
   };
 
+  public editPedidoForm: Pedido = {
+    idpedido: 0,
+    idusuario: 0,
+    fechaPedido: new Date(),
+    estadoPedido: 'PAGADO'
+  };
+
   //Edit user data
   userId: number = 0
   newEmail: string = '';
@@ -58,6 +67,11 @@ export class ProfileComponent  implements OnInit{
 
   //Modal
   modalRef?: BsModalRef;
+
+    //Alert
+    showAlert: boolean = false;
+    alertMessage: string = '';
+    alertType: string = 'success';
   
   constructor(private pedidoService: PedidosService, 
               private usuarioService: UsuariosService,
@@ -108,6 +122,12 @@ export class ProfileComponent  implements OnInit{
     this.modalRef = this.modalService.show(template);
   }
 
+  openModalTransaction(template: TemplateRef<void>, pedido: Pedido) {
+    this.editPedidoForm = {...pedido};
+    this.editPedidoForm.estadoPedido = 'PAGADO';
+    this.modalRef = this.modalService.show(template);
+  }
+
   getPedidosByUser(userId: number): void {
     this.pedidoService.getPedidosByUser(userId)
       .subscribe(pedidos => {
@@ -132,7 +152,13 @@ export class ProfileComponent  implements OnInit{
     console.log(this.newEmail)
     this.usuarioService.updateEmail(this.userId, this.newEmail).subscribe(response => {
       console.log('Email actualizado:', response);
-      // Aquí puedes manejar la respuesta como desees
+      this.modalRef?.hide();
+      this.alertMessage = 'Email actualizado';
+      this.alertType = 'success';
+      this.showAlert = true;
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 5000);
     }, error => {
       console.error('Error al actualizar el email:', error);
     });
@@ -143,7 +169,12 @@ export class ProfileComponent  implements OnInit{
     console.log(this.newDireccion)
     this.usuarioService.updateAddress(this.userId, this.newDireccion).subscribe(response => {
       console.log('Dirección actualizada:', response);
-      // Aquí puedes manejar la respuesta como desees
+      this.alertMessage = 'Dirección actualizada';
+      this.alertType = 'success';
+      this.showAlert = true;
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 5000);
     }, error => {
       console.error('Error al actualizar la Dirección:', error);
     });
@@ -154,7 +185,12 @@ export class ProfileComponent  implements OnInit{
     console.log(this.newPassword)
     this.usuarioService.updatePassword(this.userId, this.newPassword).subscribe(response => {
       console.log('Contraseña actualizada:', response);
-      // Aquí puedes manejar la respuesta como desees
+      this.alertMessage = 'Contraseña actualizada';
+      this.alertType = 'success';
+      this.showAlert = true;
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 5000);
     }, error => {
       console.error('Error al actualizar la contraseña:', error);
     });
@@ -181,13 +217,42 @@ export class ProfileComponent  implements OnInit{
             this.transaccionService.createTransaction(this.newTransaction).subscribe(
               response => {
                 console.log('transacción creada:', response);
+                this.alertMessage = 'transacción creada correctamente';
+                this.alertType = 'success';
+                this.showAlert = true;
+                setTimeout(() => {
+                  this.showAlert = false;
+                }, 5000);
               }, error => {
                 console.error('Error al crear la transacción', error);
+                this.alertMessage = 'Error al crear la transacción';
+                this.alertType = 'warning';
+                this.showAlert = true;
+                setTimeout(() => {
+                  this.showAlert = false;
+                }, 5000);
               }
             );
+
+            this.pedidoService.editPedido(this.editPedidoForm.idpedido, this.editPedidoForm).subscribe(
+              response => {
+                console.log('Pedido actualizado a:', response.estadoPedido)
+                this.alertMessage = 'Pedido actualizado correctamente';
+                this.alertType = 'info';
+                this.showAlert = true;
+                setTimeout(() => {
+                  this.showAlert = false;
+                }, 5000);
+              }, error => {
+                console.error(error);
+              }
+            )
+
+            this.modalRef?.hide();
           }, 
           error => {
             console.error(error);
+            this.modalRef?.hide();
           }
         );
       } else {

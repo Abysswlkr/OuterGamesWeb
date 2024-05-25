@@ -22,6 +22,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     AlertModule.forRoot(),
+    TabsModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

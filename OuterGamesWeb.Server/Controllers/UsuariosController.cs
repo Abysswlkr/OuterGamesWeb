@@ -81,7 +81,7 @@ namespace OuterGamesWeb.Server.Controllers
 
         // PUT: UsuariosController/EditUser
         [HttpPost("EditUser/{id}")]
-        public ActionResult EditUser(int id, Usuario usuario)
+        public async Task<ActionResult> EditUser(int id, Usuario usuario)
         {
             if (!ModelState.IsValid)
             {
@@ -90,25 +90,10 @@ namespace OuterGamesWeb.Server.Controllers
 
             try
             {
-                var usuarioExistente = _context.Usuarios.Find(usuario.Idusuario);
-
-                if (usuarioExistente != null && usuarioExistente.Idusuario != id)
-                {
-                    return BadRequest("El ID del usuario ya está registrado.");
-                }
-
-                if (usuario.Contrasena != null)
-                {
-                    usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
-                    _context.Update(usuario);
-                    _context.SaveChanges();
-                    return Ok(usuario);
-                }
-                else
-                {
-                    return BadRequest("Contraseña no ingresada correctamente");
-                }
-
+                usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
+                _context.Update(usuario);
+                await _context.SaveChangesAsync();
+                return Ok(usuario);
             }
             catch (Exception ex)
             {

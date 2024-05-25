@@ -2,6 +2,9 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Videojuego } from '../../interfaces/videojuego';
 import { VideojuegosService } from '../../services/videojuegos.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { UsuariosService } from '../../services/usuarios.service';
+import { Usuario } from '../../interfaces/usuario';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-management',
@@ -9,9 +12,29 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   styleUrl: './management.component.css'
 })
 export class ManagementComponent implements OnInit {
+  //Models
   public videojuegos: Videojuego[] = []; 
-  public errorMessage!: string;
   public videojuego!: Videojuego | null;
+  public usuarios: Usuario[] = [];
+  public usuario!: Usuario | null;
+
+  public errorMessage!: string;
+
+  public newUsuario: Usuario = {
+    idusuario: 0,
+    nombre: '',
+    correoElectronico: '',
+    contrasena: '',
+    direccionEnvio: ''
+  }; 
+
+  public editUsuarioForm: Usuario = {
+    idusuario: 0,
+    nombre: '',
+    correoElectronico: '',
+    contrasena: '',
+    direccionEnvio: ''
+  };
 
   public newVideojuegoForm: Videojuego = {
     idvideojuego: 0,
@@ -25,6 +48,7 @@ export class ManagementComponent implements OnInit {
     genero3: '',
     imagen: ''
   };
+  
 
   public editVideojuegoForm: Videojuego = {
     idvideojuego: 0,
@@ -42,6 +66,7 @@ export class ManagementComponent implements OnInit {
   //Modal
     modalRef?: BsModalRef;
     idDeleteProduct: number = 0;
+    idDeleteUser: number = 0;
 
   //Alert
   showAlert: boolean = false;
@@ -73,12 +98,13 @@ export class ManagementComponent implements OnInit {
 
 
 
-  constructor(private videojuegoService: VideojuegosService, private modalService: BsModalService) {}
+  constructor(private videojuegoService: VideojuegosService, private usuariosService: UsuariosService, 
+              private authService: AuthService, private modalService: BsModalService) {}
 
   ngOnInit(): void {
     this.getAllVideojuegos();
+    this.getAllUsuarios();
   }
-
 
   getAllVideojuegos() {
     this.videojuegoService.getAllVideojuegos().subscribe(
@@ -135,7 +161,18 @@ export class ManagementComponent implements OnInit {
     this.modalRef = this.modalService.show(template);
   }
 
-  submitEdit() {
+  submitEdit(event: Event) {
+    event.preventDefault(); // Prevenir la acción por defecto del formulario
+  
+    const form = document.querySelector('.needs-validation') as HTMLFormElement;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      form.classList.add('was-validated');
+      return; // Salir del método si el formulario no es válido
+    }
+  
+    form.classList.add('was-validated'); // Añadir la clase 'was-validated' si es válido
+  
     this.videojuegoService.editVideojuego(this.editVideojuegoForm.idvideojuego, this.editVideojuegoForm).subscribe(
       (response) => {
         console.log('Videojuego actualizado con éxito', response);
@@ -150,6 +187,7 @@ export class ManagementComponent implements OnInit {
         console.error('Error al actualizar el videojuego', error);
       }
     );
+  
     this.modalRef?.hide();
   }
 
@@ -184,10 +222,113 @@ export class ManagementComponent implements OnInit {
   }
 
 
+  //Usuarios
+  getAllUsuarios() {
+    this.usuariosService.getAllUsuarios().subscribe(
+      (usuarios) => {
+        this.usuarios = usuarios;
+      },
+      (err) => {
+        console.error(err);
+        this.errorMessage = 'Error al obtener la lista de usuarios.';
+        this.alertMessage = 'Error al obtener la lista de usuarios.';
+        this.alertType = 'info';
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
+        this.usuarios = [];
+      }
+    )
+  }
 
+  filteredUsuarios() {
+    return this.usuarios.filter(usuario => {
+      const matchesNombre = usuario.nombre.toLowerCase().includes(this.filters.nombre.toLowerCase());
+      const matchesId = usuario.idusuario.toString().includes(this.filters.id);
+
+      return matchesNombre && matchesId;
+    });
+  }
+
+  openModalcreateUser(template: TemplateRef<void>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  createUser() {
+    const form = document.querySelector('.needs-validation') as HTMLFormElement;
+    if( form.checkValidity() === false) {
+      event?.preventDefault();
+      event?.stopPropagation();
+    }
+    form.classList.add('was-validated');
+    this.authService.register(this.newUsuario).subscribe(usuario => {
+      console.log('Usuario creado:', usuario);
+      this.alertMessage = 'Registro de usuario exitoso';
+      this.alertType = 'success';
+      this.showAlert = true;
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 5000);
+    }, error => {
+      if (error.error && error.error.message) {
+        console.error('Error en el registro:', error.error.message);
+        this.alertMessage = error.error.message;
+        this.alertType = 'danger';
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
+      } else {
+        console.error('Error en el registro:', error);
+        this.alertMessage = error;
+        this.alertType = 'danger';
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
+      }
+    });
+  }
+  
+  openModalEditUser(template: TemplateRef<void>, usuario: Usuario) {
+    this.editUsuarioForm = {...usuario};
+    this.modalRef = this.modalService.show(template);
+  }
+
+  submitEditUser(event: Event) {
+    event.preventDefault(); 
+  
+    const form = document.querySelector('.needs-validation') as HTMLFormElement;
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      form.classList.add('was-validated');
+      return;
+    }
+  
+    form.classList.add('was-validated');
+  
+    this.usuariosService.editUser(this.editUsuarioForm.idusuario, this.editUsuarioForm).subscribe(
+      (response) => {
+        console.log('Usuario actualizado con éxito', response);
+        this.alertMessage = 'Usuario actualizado con éxito';
+        this.alertType = 'info';
+        this.showAlert = true;
+        setTimeout(() => {
+          this.showAlert = false;
+        }, 5000);
+      },
+      (error) => {
+        console.error('Error al actualizar el Usuario', error);
+      }
+    );
+  
+    this.modalRef?.hide();
+  }
+
+  //Pedidos
   
 
-  //TABLE
-
+  
 
 }

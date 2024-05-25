@@ -18,6 +18,13 @@ export class UsuariosService {
     };
   }
 
+  getAllUsuarios(): Observable<Usuario[]> {
+    const url = `${this.apiUrl}/GetUsuarios`;
+    return this.http.get<Usuario[]>(url).pipe(
+      catchError(this.handleError<Usuario[]>('getAllUsuarios',[]))
+    );
+  }
+
   getUserById(userId: number): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.apiUrl}/GetUserById/${userId}`);
   }

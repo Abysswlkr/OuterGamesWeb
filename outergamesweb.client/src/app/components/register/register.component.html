@@ -9,8 +9,8 @@
           </div>
           <div class="card-body p-4 p-sm-5">
             <h5 class="card-title text-center mb-5 fw-light fs-5">Registro</h5>
-            <form (submit)="register()">
 
+            <form (submit)="register()" class="needs-validation" novalidate>
               <div class="form-floating mb-3">
                 <input type="text" [(ngModel)]="usuario.nombre" class="form-control" name="nombre" required/>
                 <label for="floatingInputUsername">Nombre</label>
@@ -57,3 +57,9 @@
     </div>
   </div>
 </section>
+
+<div class="alert-container" *ngIf="showAlert">
+  <alert [type]="alertType" dismissOnTimeout="5000">
+    {{ alertMessage }}
+  </alert>
+</div>

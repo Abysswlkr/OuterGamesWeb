@@ -14,15 +14,15 @@
                   <h4 class="mt-1 mb-5 pb-1">Outer Games</h4>
                 </div>
 
-                <form (submit)="login()">
+                <form (submit)="login()" class="needs-validation" novalidate>
 
                   <div class="form-floating mb-3">
-                    <input [(ngModel)]="credentials.correoElectronico" name="correoElectronico" type="email" class="form-control" id="floatingInput">
+                    <input [(ngModel)]="credentials.correoElectronico" name="correoElectronico" type="email" class="form-control" id="floatingInput" required>
                     <label for="floatingInputUsername">Correo</label>
                   </div>
 
                   <div class="form-floating mb-3">
-                    <input [(ngModel)]="credentials.contrasena" name="contrasena" type="password" class="form-control" id="floatingPassword">
+                    <input [(ngModel)]="credentials.contrasena" name="contrasena" type="password" class="form-control" id="floatingPassword" required>
                     <label for="floatingPassword">Contraseña</label>
                   </div>
 
@@ -52,5 +52,12 @@
     </div>
   </div>
 </section>
+
+<div class="alert-container" *ngIf="showAlert">
+  <alert [type]="alertType" dismissOnTimeout="5000">
+    {{ alertMessage }}
+  </alert>
+</div>
+
 
 

@@ -76,29 +76,17 @@ namespace OuterGamesWeb.Server.Controllers
         [HttpPut("EditOrder/{id}")]
         public async Task<IActionResult> EditOrder(int id, Pedido pedido)
         {
-            if (id != pedido.Idpedido)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(pedido).State = EntityState.Modified;
-
             try
             {
+                pedido.Idpedido = id;
+                _context.Update(pedido);
                 await _context.SaveChangesAsync();
+                return Ok(pedido);
             }
-            catch (DbUpdateConcurrencyException)
+            catch 
             {
-                if (!PedidoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return StatusCode(500);
             }
-            return NoContent();
         }
 
         private bool PedidoExists(int id)
