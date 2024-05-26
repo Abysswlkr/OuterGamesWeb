@@ -1,10 +1,10 @@
 <!-- Product section -->
 <section class="py-4 m-5">
-    <div class="container border">
-        <div class="px-4 px-lg-5 my-5">
+    <div class="container border border-dark back-blur">
+        <div class="px-4 px-lg-5 my-5 text-white">
             <div class="row gx-4 gx-lg-5 align-items-center" *ngIf="videojuego">
                 <div class="col-md-6" >
-                    <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="...">
+                    <img class="card-img-top mb-5 mb-md-0" src="../../../assets/images/img/individual_image.svg" alt="...">
                 </div>
                 <div class="col-md-6">
                     <h1 class="display-5 fw-bolder">{{ videojuego.nombreVideojuego }}</h1>
@@ -26,7 +26,7 @@
                         </button>
                         </div>
                     </div>                
-                    <button class="btn btn-outline-dark flex-shrink-0 mt-3" type="button" (click)="addToCart(videojuego)">
+                    <button class="btn btn-outline-light flex-shrink-0 mt-3" type="button" (click)="addToCart(videojuego)">
                         <i class="bi-cart-fill me-1"></i>
                         Añadir al carrito
                     </button>

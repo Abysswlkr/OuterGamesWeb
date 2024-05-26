@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Videojuego } from '../../interfaces/videojuego';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-videogame',
@@ -18,7 +19,7 @@ maxQuantity: number = 5;
   alertMessage: string = '';
   alertType: string = 'success';
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private authService: AuthService) {}
 
   ngOnInit(): void {
       this.videojuego = history.state.data;
@@ -42,6 +43,15 @@ maxQuantity: number = 5;
     }
 
   addToCart(videojuego: Videojuego) {
+    if(!this.authService.isAuthenticated()) {
+      this.alertMessage = 'Porfavor ingrese a su  cuenta de usuario para realizar un pedido';
+    this.alertType = 'warning';
+    this.showAlert = true;
+    setTimeout(() => {
+      this.showAlert = false;
+    }, 5000);
+    return;
+    }
     const cantidadToAdd = this.cantidad[videojuego.idvideojuego] || 1;
     const videojuegoToAdd = {...videojuego, cantidad: cantidadToAdd};
     this.cartService.addToCart(videojuegoToAdd);

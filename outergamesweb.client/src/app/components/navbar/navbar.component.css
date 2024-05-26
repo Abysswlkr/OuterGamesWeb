@@ -11,4 +11,7 @@
     padding: 0.5rem;
   }
 
-  
+  .navbar-custom {
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px); 
+}

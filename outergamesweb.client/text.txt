@@ -1,7 +1,0 @@
-Lo que falta: 
-
-botón agregar al carrito en videojuego (solo usuario logeado) (colocar un info uq diga logeate si quieres comprar o algo así)
-loading (videojuegos, management, landing)
-por ultimo agregar un poco más de diseño (background image, imagenes, etc)
-actualizar tablas
-arreglar base de datos (quitar relaciones)

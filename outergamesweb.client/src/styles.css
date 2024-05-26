@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+    background-image: url('./assets/images/background_image.jpg'); /* Asegúrate de que la ruta sea correcta */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0; /* Asegúrate de que no haya márgenes por defecto */
+    padding: 0;
+    min-height: 100vh; /* Asegura que el body ocupe al menos la altura total de la ventana */
+}

@@ -10,3 +10,8 @@
     text-align: center;
     padding: 0.5rem;
   }
+
+  .back-blur{
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(2px); 
+  }
